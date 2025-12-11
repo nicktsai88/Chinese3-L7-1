@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>張釋之執法 - 互動學習 App</title>
+    <title>張釋之執法 - 互動學習 App (離線版)</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -81,33 +81,89 @@
             Layers, ChevronDown, ChevronUp, Loader2, Sparkles, Image as ImageIcon, Download, ImageOff
         } from 'lucide-react';
 
-        // Firebase Imports (using CDN for standalone HTML)
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { 
-            getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut 
-        } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        import { 
-            getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, 
-            addDoc, deleteDoc, serverTimestamp 
-        } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        // --- LocalStorage Database Helper ---
+        // 模擬資料庫操作，將資料存於 LocalStorage
+        const STORAGE_KEYS = {
+            USER: 'learning_app_user',
+            HISTORY: 'learning_app_history',
+            MISTAKES: 'learning_app_mistakes',
+            FAVORITES: 'learning_app_favorites'
+        };
 
-        // --- Firebase Configuration ---
-        // 注意：若要在 GitHub Pages 上部署，請將下方的 JSON.parse(__firebase_config) 替換為您的真實 Firebase 設定物件
-        // const firebaseConfig = { apiKey: "...", authDomain: "...", ... };
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            // Fallback for local testing without environment injection
-            apiKey: "PLACEHOLDER_API_KEY",
-            authDomain: "placeholder.firebaseapp.com",
-            projectId: "placeholder-id"
+        const LocalDB = {
+            getUser: () => {
+                const data = localStorage.getItem(STORAGE_KEYS.USER);
+                return data ? JSON.parse(data) : null;
+            },
+            saveUser: (name) => {
+                const user = { uid: 'local-user', displayName: name, lastLogin: new Date().toISOString() };
+                localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+                return user;
+            },
+            clearUser: () => {
+                // 不清除所有資料，只清除登入狀態（這裡我們僅移除 user 物件，保留紀錄）
+                // 實務上 App 邏輯是檢查是否有 user 物件
+                localStorage.removeItem(STORAGE_KEYS.USER);
+            },
+            
+            // 歷史紀錄
+            getHistory: () => {
+                const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
+                return data ? JSON.parse(data) : [];
+            },
+            addHistory: (record) => {
+                const list = LocalDB.getHistory();
+                const newRecord = { ...record, id: Date.now().toString(), date: new Date().toISOString() };
+                list.unshift(newRecord); // 最新在最前
+                localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(list));
+                return newRecord;
+            },
+
+            // 錯題本
+            getMistakes: () => {
+                const data = localStorage.getItem(STORAGE_KEYS.MISTAKES);
+                return data ? JSON.parse(data) : [];
+            },
+            addMistake: (mistake) => {
+                const list = LocalDB.getMistakes();
+                // 檢查是否已存在 (避免重複添加同一題)
+                const exists = list.some(item => item.id === mistake.id);
+                if (!exists) {
+                    const newMistake = { ...mistake, timestamp: new Date().toISOString() };
+                    list.unshift(newMistake);
+                    localStorage.setItem(STORAGE_KEYS.MISTAKES, JSON.stringify(list));
+                }
+            },
+            removeMistake: (id) => {
+                const list = LocalDB.getMistakes().filter(item => item.id.toString() !== id.toString());
+                localStorage.setItem(STORAGE_KEYS.MISTAKES, JSON.stringify(list));
+            },
+
+            // 收藏夾
+            getFavorites: () => {
+                const data = localStorage.getItem(STORAGE_KEYS.FAVORITES);
+                // 存的是 ID 陣列
+                return data ? new Set(JSON.parse(data)) : new Set();
+            },
+            toggleFavorite: (id) => {
+                const favs = LocalDB.getFavorites();
+                const idStr = id.toString();
+                if (favs.has(idStr)) {
+                    favs.delete(idStr);
+                } else {
+                    favs.add(idStr);
+                }
+                localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(Array.from(favs)));
+                return favs;
+            },
+            removeFavorite: (id) => {
+                const favs = LocalDB.getFavorites();
+                favs.delete(id.toString());
+                localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(Array.from(favs)));
+            }
         };
         
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        
         // --- Global Data Definitions ---
-        // 預設圖片路徑：假設圖片放在 images 資料夾下，檔名格式為 category_index.jpg
         const STUDY_CONTENT = {
             intro: {
                 title: "形音義與題解",
@@ -428,48 +484,28 @@
 
         const AuthScreen = ({ onLogin }) => {
             const [name, setName] = useState('');
-            const [loading, setLoading] = useState(false);
             const [savedName, setSavedName] = useState('');
 
             useEffect(() => {
-                const saved = localStorage.getItem('lastUserName');
-                if (saved) setSavedName(saved);
+                const user = LocalDB.getUser();
+                if (user && user.displayName) {
+                    setSavedName(user.displayName);
+                }
             }, []);
 
-            const handleLogin = async (e, forcedName) => {
+            const handleLogin = (e, forcedName) => {
                 if (e) e.preventDefault();
                 const loginName = forcedName || name;
                 if (!loginName.trim()) return;
-                performLogin(loginName);
-            };
-
-            const performLogin = async (userName) => {
-                setLoading(true);
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    const user = auth.currentUser;
-                    if (user) {
-                        localStorage.setItem('lastUserName', userName);
-                        const userRef = doc(db, 'artifacts', appId, 'users', user.uid);
-                        await setDoc(userRef, { name: userName, lastLogin: serverTimestamp() }, { merge: true });
-                        user.displayName = userName; 
-                        onLogin(user);
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert("登入失敗，請稍後再試。若此錯誤持續發生，可能是 Firebase 配置有誤。");
-                } finally {
-                    setLoading(false);
-                }
+                
+                const user = LocalDB.saveUser(loginName);
+                onLogin(user);
             };
 
             const handleQuickLogin = () => {
                 const randomNum = Math.floor(Math.random() * 1000);
-                performLogin(`訪客 ${randomNum}`);
+                const user = LocalDB.saveUser(`訪客 ${randomNum}`);
+                onLogin(user);
             };
 
             return (
@@ -483,13 +519,13 @@
                         
                         {savedName && (
                             <div className="mb-6">
-                                <button onClick={() => handleLogin(null, savedName)} disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-xl font-bold hover:from-orange-600 hover:to-amber-600 transition shadow-lg shadow-orange-200 flex items-center justify-center group">
+                                <button onClick={() => handleLogin(null, savedName)} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-xl font-bold hover:from-orange-600 hover:to-amber-600 transition shadow-lg shadow-orange-200 flex items-center justify-center group">
                                     <Sparkles className="w-5 h-5 mr-2 animate-pulse text-yellow-200" />
                                     <span>以 {savedName} 繼續學習</span>
                                     <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition" />
                                 </button>
                                 <div className="text-center mt-3">
-                                    <button onClick={() => { setSavedName(''); localStorage.removeItem('lastUserName'); }} className="text-xs text-stone-400 hover:text-stone-600 underline">這不是我，切換帳號</button>
+                                    <button onClick={() => { setSavedName(''); LocalDB.clearUser(); }} className="text-xs text-stone-400 hover:text-stone-600 underline">這不是我，切換帳號</button>
                                 </div>
                                 <div className="relative my-6"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-stone-200"></div></div><div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-stone-500">或使用新身分</span></div></div>
                             </div>
@@ -500,15 +536,15 @@
                                 <label className="block text-sm font-medium text-stone-700 mb-1">請輸入您的姓名</label>
                                 <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="Ex: 王小明" />
                             </div>
-                            <button type="submit" disabled={loading || !name.trim()} className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition disabled:opacity-50">
-                                {loading ? "登入中..." : "開始學習"}
+                            <button type="submit" disabled={!name.trim()} className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition disabled:opacity-50">
+                                開始學習
                             </button>
                         </form>
                         
                         <div className={`mt-4 flex items-center justify-between ${savedName ? 'hidden' : ''}`}>
                             <div className="h-px bg-stone-200 flex-1"></div><span className="text-sm text-stone-400 px-2">或</span><div className="h-px bg-stone-200 flex-1"></div>
                         </div>
-                        <button onClick={handleQuickLogin} disabled={loading} className={`mt-4 w-full bg-stone-50 border-2 border-stone-200 text-stone-600 py-3 rounded-lg font-semibold hover:bg-stone-100 transition flex items-center justify-center disabled:opacity-50 ${savedName ? 'hidden' : ''}`}>
+                        <button onClick={handleQuickLogin} className={`mt-4 w-full bg-stone-50 border-2 border-stone-200 text-stone-600 py-3 rounded-lg font-semibold hover:bg-stone-100 transition flex items-center justify-center ${savedName ? 'hidden' : ''}`}>
                             <Zap className="w-5 h-5 mr-2 text-yellow-500" /> 快速體驗 (免輸入姓名)
                         </button>
                     </div>
@@ -516,7 +552,7 @@
             );
         };
 
-        const Dashboard = ({ user, onNavigate }) => {
+        const Dashboard = ({ user, onLogout, onNavigate }) => {
             return (
                 <div className="p-6 max-w-4xl mx-auto space-y-6">
                     <header className="flex justify-between items-center mb-8">
@@ -524,7 +560,9 @@
                             <h1 className="text-2xl font-bold text-stone-800">歡迎回來，{user.displayName || "同學"}</h1>
                             <p className="text-stone-500">準備好開始今天的學習了嗎？</p>
                         </div>
-                        <button onClick={() => auth.signOut()} className="text-stone-500 hover:text-red-500"><LogOut className="w-6 h-6" /></button>
+                        <button onClick={onLogout} className="text-stone-500 hover:text-red-500 flex items-center">
+                            <LogOut className="w-6 h-6 mr-1" /> <span className="text-sm">登出</span>
+                        </button>
                     </header>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -771,28 +809,15 @@
             }, [selectedCategory]);
 
             useEffect(() => {
-                const loadFavs = async () => {
-                    if (!user) return;
-                    const favRef = collection(db, 'artifacts', appId, 'users', user.uid, 'favorites');
-                    const snap = await getDocs(favRef);
-                    const favIds = new Set(snap.docs.map(d => parseInt(d.id)));
-                    setFavorites(favIds);
-                };
-                loadFavs();
-            }, [user]);
+                const favSet = LocalDB.getFavorites();
+                const intSet = new Set(Array.from(favSet).map(id => parseInt(id)));
+                setFavorites(intSet);
+            }, []);
 
-            const toggleFavorite = async (qId) => {
-                if (!user) return;
-                const newFavs = new Set(favorites);
-                const favRef = doc(db, 'artifacts', appId, 'users', user.uid, 'favorites', qId.toString());
-                if (newFavs.has(qId)) {
-                    newFavs.delete(qId);
-                    await deleteDoc(favRef);
-                } else {
-                    newFavs.add(qId);
-                    await setDoc(favRef, { timestamp: serverTimestamp() });
-                }
-                setFavorites(newFavs);
+            const toggleFavorite = (qId) => {
+                const newFavs = LocalDB.toggleFavorite(qId);
+                const intSet = new Set(Array.from(newFavs).map(id => parseInt(id)));
+                setFavorites(intSet);
             };
 
             const handleAnswer = (option) => {
@@ -810,7 +835,7 @@
                 }
             };
 
-            const handleSubmit = async () => {
+            const handleSubmit = () => {
                 if (isSubmitting) return; 
                 setIsSubmitting(true);
                 try {
@@ -829,10 +854,8 @@
                         };
                     });
                     
-                    // Save to history
-                    const historyRef = collection(db, 'artifacts', appId, 'users', user.uid, 'history');
-                    await addDoc(historyRef, {
-                        date: serverTimestamp(),
+                    // Save to local history
+                    LocalDB.addHistory({
                         score: Math.round((score / questions.length) * 100),
                         total: questions.length,
                         category: selectedCategory === 'all' ? '綜合挑戰' : selectedCategory,
@@ -842,20 +865,19 @@
                     // Save mistakes
                     for (const detail of details) {
                         if (!detail.isCorrect) {
-                            const mistakeRef = doc(db, 'artifacts', appId, 'users', user.uid, 'mistakes', detail.id.toString());
-                            await setDoc(mistakeRef, {
+                            LocalDB.addMistake({
+                                id: detail.id,
                                 question: detail.question,
                                 answer: detail.correctAnswer,
-                                category: detail.category,
-                                timestamp: serverTimestamp()
-                            }, { merge: true });
+                                category: detail.category
+                            });
                         }
                     }
 
                     onComplete({ score: Math.round((score / questions.length) * 100), details });
                 } catch (error) {
                     console.error(error);
-                    alert("儲存成績時發生錯誤，請檢查網路連線");
+                    alert("儲存成績時發生錯誤");
                     setIsSubmitting(false); 
                 }
             };
@@ -969,22 +991,15 @@
 
             useEffect(() => {
                 const fetchData = async () => {
-                    if (!user) return;
-                    let q;
                     let data = [];
-                    const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid);
-
+                    
                     if (type === 'history') {
-                        q = query(collection(userDocRef, 'history'), orderBy('date', 'desc'));
-                        const snap = await getDocs(q);
-                        data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        data = LocalDB.getHistory();
                     } else if (type === 'mistakes') {
-                        q = query(collection(userDocRef, 'mistakes'), orderBy('timestamp', 'desc'));
-                        const snap = await getDocs(q);
-                        data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        data = LocalDB.getMistakes();
                     } else if (type === 'favorites') {
-                        const snap = await getDocs(collection(userDocRef, 'favorites'));
-                        const favIds = snap.docs.map(d => parseInt(d.id));
+                        const favSet = LocalDB.getFavorites();
+                        const favIds = Array.from(favSet).map(id => parseInt(id));
                         data = ALL_QUESTIONS.filter(q => favIds.includes(q.id));
                     }
 
@@ -1022,7 +1037,7 @@
                                     >
                                         <div>
                                             <div className="text-stone-500 text-xs mb-1">
-                                                {item.date?.toDate ? item.date.toDate().toLocaleString() : 'Just now'}
+                                                {item.date ? new Date(item.date).toLocaleString() : 'Just now'}
                                             </div>
                                             <div className="font-bold text-stone-800 flex items-center">
                                                 <span className="mr-2 text-sm bg-stone-100 px-2 py-0.5 rounded text-stone-600">
@@ -1131,10 +1146,10 @@
                                     <div className="mt-4 flex justify-end">
                                         {type === 'mistakes' && (
                                             <button 
-                                                onClick={async (e) => {
+                                                onClick={(e) => {
                                                     e.target.innerText = "已移除";
                                                     e.target.disabled = true;
-                                                    await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'mistakes', item.id.toString()));
+                                                    LocalDB.removeMistake(item.id);
                                                 }}
                                                 className="text-sm text-stone-400 hover:text-red-500 flex items-center"
                                             >
@@ -1143,10 +1158,10 @@
                                         )}
                                         {type === 'favorites' && (
                                             <button 
-                                                onClick={async (e) => {
+                                                onClick={(e) => {
                                                     e.target.innerText = "已取消收藏";
                                                     e.target.disabled = true;
-                                                    await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'favorites', item.id.toString()));
+                                                    LocalDB.removeFavorite(item.id);
                                                 }}
                                                 className="text-sm text-stone-400 hover:text-red-500 flex items-center"
                                             >
@@ -1169,32 +1184,24 @@
             const [quizResult, setQuizResult] = useState(null);
 
             useEffect(() => {
-                const unsubscribe = onAuthStateChanged(auth, async (u) => {
-                    if (u) {
-                        const docRef = doc(db, 'artifacts', appId, 'users', u.uid);
-                        try {
-                            const docSnap = await getDoc(docRef);
-                            if (docSnap.exists()) {
-                                u.displayName = docSnap.data().name;
-                            }
-                        } catch (e) {
-                            console.error("Firestore access failed (likely permission or config)", e);
-                        }
-                        setUser(u);
+                const checkLogin = () => {
+                    const savedUser = LocalDB.getUser();
+                    if (savedUser) {
+                        setUser(savedUser);
                         setView('dashboard');
                     } else {
                         setUser(null);
                         setView('auth');
                     }
                     setLoading(false);
-                });
-                return () => unsubscribe();
+                };
+                checkLogin();
             }, []);
 
             if (loading) return <LoadingScreen />;
 
             if (view === 'auth') return <AuthScreen onLogin={(u) => { setUser(u); setView('dashboard'); }} />;
-            if (view === 'dashboard') return <Dashboard user={user} onNavigate={setView} />;
+            if (view === 'dashboard') return <Dashboard user={user} onLogout={() => { setUser(null); setView('auth'); }} onNavigate={setView} />;
             if (view === 'learn') return <LearningModule onBack={() => setView('dashboard')} />;
             if (view === 'quiz_setup') {
                 return <FullQuizModule user={user} onBack={() => setView('dashboard')} onComplete={(res) => { setQuizResult(res); setView('quiz_result'); }} />;
