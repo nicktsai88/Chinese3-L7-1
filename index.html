@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>張釋之執法 - 互動學習 App (離線版)</title>
+    <title>張釋之執法 - 互動學習 App (完整版)</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -101,8 +101,6 @@
                 return user;
             },
             clearUser: () => {
-                // 不清除所有資料，只清除登入狀態（這裡我們僅移除 user 物件，保留紀錄）
-                // 實務上 App 邏輯是檢查是否有 user 物件
                 localStorage.removeItem(STORAGE_KEYS.USER);
             },
             
@@ -114,7 +112,7 @@
             addHistory: (record) => {
                 const list = LocalDB.getHistory();
                 const newRecord = { ...record, id: Date.now().toString(), date: new Date().toISOString() };
-                list.unshift(newRecord); // 最新在最前
+                list.unshift(newRecord); 
                 localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(list));
                 return newRecord;
             },
@@ -126,7 +124,6 @@
             },
             addMistake: (mistake) => {
                 const list = LocalDB.getMistakes();
-                // 檢查是否已存在 (避免重複添加同一題)
                 const exists = list.some(item => item.id === mistake.id);
                 if (!exists) {
                     const newMistake = { ...mistake, timestamp: new Date().toISOString() };
@@ -142,7 +139,6 @@
             // 收藏夾
             getFavorites: () => {
                 const data = localStorage.getItem(STORAGE_KEYS.FAVORITES);
-                // 存的是 ID 陣列
                 return data ? new Set(JSON.parse(data)) : new Set();
             },
             toggleFavorite: (id) => {
@@ -163,17 +159,17 @@
             }
         };
         
-        // --- Global Data Definitions ---
+        // --- Global Data Definitions (根據 PDF 內容完整更新) ---
         const STUDY_CONTENT = {
             intro: {
-                title: "形音義與題解",
+                title: "前哨站、題解、作者的補充注釋",
                 items: [
                     { term: "先河", definition: "借指開創於先的人，或指事物的本源。" },
                     { term: "直言抗辯", definition: "以正直的言論加以辯駁。" },
                     { term: "風骨", definition: "指人的品格、性格。" },
                     { term: "太史令", definition: "古官名，為史官之長，漢武帝設置，負責記載朝廷大事兼掌天文曆法。" },
                     { term: "宮刑", definition: "男子去勢的刑罰，亦稱為「腐刑」，約始於商周時。" },
-                    { term: "報任少卿書", definition: "司馬遷所著：「行莫醜於辱先，而莫大於宮刑。」（詬，音 ㄍㄡˋ，恥辱。）" }
+                    { term: "報任少卿書", definition: "司馬遷所著：「行莫醜於辱先，而莫大於宮刑。」（詬，音ㄍㄡˋ，恥辱。）" }
                 ],
                 author: {
                     title: "作者補充：司馬遷",
@@ -184,25 +180,26 @@
                         "忍辱著書期 (47~56歲)：47歲為李陵辯護而入獄，48歲為免死刑而接受宮刑。50歲出獄。漢武帝知道司馬遷是無辜的，升他為中書令。",
                         "晚年 (57~60歲)"
                     ],
-                    motivation: "司馬遷出生於史官世家，父親司馬談是一位學識淵博的學者...欲「究天人之際，通古今之變，成一家之言」。"
+                    motivation: "司馬遷出生於史官世家，父親司馬談是一位學識淵博的學者，在武帝年間擔任太史令，曾有宏願想編修一部重現春秋精神，論載明君賢臣死士的史書。司馬遷繼承父志，並欲「究天人之際，通古今之變，成一家之言」。從歷史人物客觀活動分析成敗得失，從歷史發展尋找歷代王朝興衰原因，更進一步透過史書表達他的社會政治理想。",
+                    extra: "報任少卿書：司馬遷53歲時寫給好友任安的一篇自傳式長信，說明自己歷經腐刑的奇恥大辱後，「隱忍苟活」的原因，把自己的遭遇、心情及堅持完成史記的決心，詳盡地告訴好友。"
                 }
             },
             shiji: {
-                title: "史記體例表格",
-                description: "《史記》是中國史上首部紀傳體通史，共五十二萬六千餘字。",
+                title: "史記內容簡介",
+                description: "《史記》是中國史上首部紀傳體通史，共五十二萬六千餘字，有本紀十二卷、表十卷、書八卷、世家三十卷、列傳七十卷。",
                 table: [
                     { 
                         category: "本紀", 
                         count: "十二卷", 
-                        content: "記敘歷代帝王事蹟，是全書敘述的提綱。按時間記載帝王的世系和國家大事。", 
-                        note: "破例收錄：項羽、呂后（雖非帝王，但掌握實權）。",
+                        content: "記敘歷代帝王事蹟，是全書敘述的提綱。按時間記載帝王的世系和國家大事，以事繫年，屬於全國的編年大事紀。前五卷分別記述傳說中的五帝，以及夏、商、周和秦國前期歷史；後七卷記載秦始皇和漢高祖劉邦至漢武帝時期的逐年大事。", 
+                        note: "項羽、呂后並非帝王，但司馬遷認為他們具有影響世局發展的力量，因此破例列入本紀，題為項羽本紀、呂太后本紀。",
                         image: "images/shiji_0.jpg"
                     },
                     { 
                         category: "表", 
                         count: "十卷", 
                         content: "以時間為中心，用表格方式整理重大歷史事件。使歷史發展的脈絡更為明晰。", 
-                        note: "—",
+                        note: "「表」的形式源於周譜，是用表格譜列歷史大事件，和某些列傳長篇幅記載的人物活動相較，這種寫法使歷史發展的脈絡更為明晰。",
                         image: "images/shiji_1.jpg"
                     },
                     { 
@@ -215,100 +212,106 @@
                     { 
                         category: "世家", 
                         count: "三十卷", 
-                        content: "記述貴族王侯及其子孫的歷史事蹟。多記述春秋、戰國時期各諸侯國興衰存亡的歷史。", 
-                        note: "破例收錄：孔子（至聖）、陳涉（首位起義平民）、外戚。",
+                        content: "記述貴族王侯及其子孫的歷史事蹟。多記述春秋、戰國時期各諸侯國興衰存亡的歷史。有些事件雖不涉及全國範圍，但對某一封國或全國社稷生活的某一方面有較大影響的，皆收入書中。", 
+                        note: "破例收錄：1.孔子（因學問傳世，推崇其為至聖）。2.陳涉（為中國首位起義欲推翻朝廷的平民百姓，且曾自立為王）。3.外戚（后妃得寵使外戚成為影響朝廷的重要勢力）。",
                         image: "images/shiji_3.jpg"
                     },
                     { 
                         category: "列傳", 
                         count: "七十卷", 
-                        content: "列敘大臣至於平民各類人物的歷史表現。包含專傳、合傳、類傳（如刺客列傳）。", 
-                        note: "少數列傳記外國史和少數民族史。末篇《太史公自序》為自傳。",
+                        content: "列敘大臣至於平民各類人物的歷史表現。「列傳」為司馬遷首創的史書體例，專記歷史上的重要人物。包含：專傳（單記一人，如伍子胥列傳）、合傳（記述兩人或數人以上，如廉頗藺相如列傳）、類傳（收錄若干同類人物，如刺客列傳）。", 
+                        note: "1. 少數列傳記外國史和少數民族史，例如：匈奴列傳等。 2. 末篇太史公自序為自傳，司馬遷在該篇中先敘自己的家世和事蹟，並說明編著本書的經過和旨意。",
                         image: "images/shiji_4.jpg"
                     }
                 ]
             },
             idioms: {
-                title: "成語典故",
+                title: "出自史記的名句",
                 items: [
                     { 
                         name: "燕雀安知鴻鵠之志", 
-                        mean: "比喻一般人無法明白雄才大略者的遠大志向。", 
-                        source: "《史記．陳涉世家》",
+                        mean: "小小的燕子和麻雀哪裡知道大鳥（大雁或天鵝）欲展翅翱翔的宏願呢？比喻一般人無法明白雄才大略者的遠大志向。", 
+                        source: "《史記．陳涉世家》：「陳涉太息曰：『嗟乎，燕雀安知鴻鵠之志哉！』」",
                         image: "images/idioms_0.jpg"
                     },
                     { 
                         name: "桃李不言，下自成蹊", 
-                        mean: "比喻只要為人真誠，自能感動別人，為人所敬仰；或比喻應注重實際，不尚虛名。", 
-                        source: "《史記．李將軍列傳》",
+                        mean: "比喻只要為人真誠，自能感動別人，為人所敬仰；或比喻應注重實際，不尚虛名。（蹊，小路）。", 
+                        source: "《史記．李將軍列傳》：「諺曰：『桃李不言，下自成蹊。』此言雖小，可以諭大也。」",
                         image: "images/idioms_1.jpg" 
                     },
                     { 
                         name: "不鳴則已，一鳴驚人", 
-                        mean: "比喻人平時沒有特殊表現、默默無聞，一旦施展才華，即能做出非凡的成果。", 
-                        source: "《史記．淳于髡傳》",
+                        mean: "鳥三年不飛不鳴，但一飛即可沖天，一鳴即能驚人。比喻人平時沒有特殊表現、默默無聞，一旦施展才華，即能做出非凡的成果。", 
+                        source: "《史記．淳于髡傳》：「此鳥不飛則已，一飛沖天；不鳴則已，一鳴驚人。」",
                         image: "images/idioms_2.jpg"
                     },
                     { 
                         name: "運籌帷幄之中，決勝千里之外", 
-                        mean: "說明某人善於謀略及指揮。", 
-                        source: "《史記．高祖本紀》",
+                        mean: "將領在軍營中謀畫軍事戰略，就可以使在千里之外的戰場上的士兵們，戰勝敵人。說明某人善於謀略及指揮。（帷幄，軍營中的帳幕）。", 
+                        source: "《史記．高祖本紀》：「夫運籌策帷帳之中，決勝於千里之外，吾不如子房（張良）。」",
                         image: "images/idioms_3.jpg"
                     },
                     { 
                         name: "無顏見江東父老", 
                         mean: "指心懷羞愧，沒臉見自己人。", 
-                        source: "《史記．項羽本紀》",
+                        source: "《史記．項羽本紀》：楚漢相爭，項羽被漢軍困在垓下，四面楚歌。後項王退到烏江西岸。烏江亭長勸項羽渡江回到江東，據地為王。項羽笑曰：「縱江東父兄憐而王我，我何面目見之？」乃自刎而死。",
                         image: "images/idioms_4.jpg"
                     }
                 ]
             },
             grammar: {
-                title: "課文詞語與語法",
+                title: "課文詞語的補充注釋與辨析",
                 items: [
-                    { text: "釋之「為」廷尉", mean: "當、擔任", image: "images/grammar_0.jpg" },
-                    { text: "於是「使」騎捕", mean: "派遣" },
-                    { text: "於是使「騎」捕", mean: "騎兵", image: "images/grammar_2.jpg" },
-                    { text: "「匿」橋下", mean: "隱藏", image: "images/grammar_3.jpg" },
-                    { text: "久「之」", mean: "助詞，無義" },
-                    { text: "「即」出", mean: "便、就" },
-                    { text: "「即」走耳", mean: "便、就" },
-                    { text: "即走「耳」", mean: "矣、了" },
-                    { text: "「當」罰金 / 「當」之罰金", mean: "判處", image: "images/grammar_8.jpg" },
-                    { text: "「親」驚吾馬", mean: "親自" },
-                    { text: "法「者」", mean: "助詞，表示停頓" },
-                    { text: "如此「而」更重之", mean: "卻 (亦可作假如)" },
-                    { text: "更「重」之", mean: "加重" },
-                    { text: "更重「之」", mean: "指罪" },
-                    { text: "「是」法不信", mean: "此、這" },
-                    { text: "不信「於」民", mean: "被" },
-                    { text: "上「使」立誅之", mean: "假使 (或派人)" },
-                    { text: "天下「之」平", mean: "的" },
-                    { text: "「良」久", mean: "很、甚、極" },
-                    { text: "廷尉「當」是也", mean: "判決" },
-                    { text: "當「是」也", mean: "正確的" },
-                    { text: "涇渭分明", mean: "比喻是非好壞區別得非常清楚", image: "images/grammar_21.jpg" },
-                    { text: "乘輿", mean: "皇帝/鑾駕", image: "images/grammar_22.jpg" },
-                    { text: "黔首", mean: "平民百姓 (黔：黑色)", image: "images/grammar_23.jpg" }
+                    { text: "1. 釋之「為」廷尉", mean: "當、擔任", image: "images/grammar_0.jpg" },
+                    { text: "2. 於是「使」騎捕", mean: "派遣" },
+                    { text: "3. 於是使「騎」捕", mean: "騎兵", image: "images/grammar_2.jpg" },
+                    { text: "4. 「匿」橋下", mean: "隱藏", image: "images/grammar_3.jpg" },
+                    { text: "5. 久「之」，以為行已過", mean: "助詞，無義" },
+                    { text: "6. 「即」出，見乘輿車騎即走耳", mean: "便、就" },
+                    { text: "7. 即出，見乘輿車騎「即」走耳", mean: "便、就" },
+                    { text: "8. 即出，見乘輿車騎即走「耳」", mean: "矣、了" },
+                    { text: "9. 一人犯蹕，「當」罰金", mean: "判處", image: "images/grammar_8.jpg" },
+                    { text: "10. 此人「親」驚吾馬", mean: "親自" },
+                    { text: "11. 而廷尉乃「當」之罰金", mean: "判處" },
+                    { text: "12. 法「者」，天子所與天下公共也", mean: "助詞，用於句中，表示停頓" },
+                    { text: "13. 今法如此「而」更重之", mean: "卻。亦可作「假如」" },
+                    { text: "14. 今法如此而更「重」之", mean: "加重" },
+                    { text: "15. 今法如此而更重「之」", mean: "指罪" },
+                    { text: "16. 「是」法不信於民也", mean: "此、這" },
+                    { text: "17. 是法不信「於」民也", mean: "被" },
+                    { text: "18. 上「使」立誅之則已", mean: "假使。另有一說作「派人」" },
+                    { text: "19. 天下「之」平也", mean: "的" },
+                    { text: "20. 一傾而「天下」用法皆為輕重", mean: "指天下執行法律者" },
+                    { text: "21. 用法皆為輕重", mean: "此處原句為：「用法皆為之輕重」，省略的「之」字，指執法偏斜不正" },
+                    { text: "22. 唯陛下察「之」", mean: "指此事" },
+                    { text: "23. 「良」久，上曰：「廷尉當是也。」", mean: "很、甚、極" },
+                    { text: "24. 廷尉「當」是也", mean: "判決" },
+                    { text: "25. 廷尉當「是」也", mean: "正確的" },
+                    { text: "補充：涇渭分明", mean: "涇水、渭水各有清濁，二水會合，仍分得很清楚。比喻是非好壞區別得非常清楚。反義：涇渭不分。", image: "images/grammar_21.jpg" },
+                    { text: "補充：無隙可乘", mean: "沒有可以利用的機會。" },
+                    { text: "補充：「令」他馬", mean: "近義：如、若、使、倘。" },
+                    { text: "補充：立誅之辨析", mean: "表殺死義時，「殺」是通稱。「弒」多用於下殺上。「戮」多用於上殺下。「誅」表殺有罪之人。" },
+                    { text: "補充：陛下", mean: "近義：皇上、聖上。反義：百姓、布衣、黎民、黔首。（黔：黑色。源於古人以黑色頭巾包覆頭部的習俗，意指平民百姓。）", image: "images/grammar_23.jpg" }
                 ]
             },
             honorifics: {
                 title: "敬詞謙詞對照表",
-                intro: "古時臣子對皇帝敬稱「陛下」，源於「陛」為正殿最高階。臣子謙稱「下臣」。",
+                intro: "中華民族一向有禮儀之邦的稱號。古時，臣子對皇帝敬稱「陛下」，是從秦始皇開始的。「陛」是正殿的最高階。臣下要奏事或上書時，請臺階之下的近臣轉達，故用「陛下」來敬稱皇帝，而臣子則謙稱自己為「下臣」。",
                 respect: [
-                    { key: "令", words: "令尊(父)、令堂(母)、令郎(子)、令媛(女)" },
-                    { key: "尊", words: "尊夫人(妻)、尊姓大名(姓名)" },
-                    { key: "貴", words: "貴庚(年齡)、貴姓、貴校、貴公司、貴公館" },
-                    { key: "賢", words: "賢喬梓(父子)、賢昆仲(兄弟)、賢伉儷(夫婦)" },
-                    { key: "高", words: "高見、高就" }
+                    { key: "令", words: "令尊(稱對方的父親)、令堂(稱對方的母親)、令郎(稱對方的兒子)、令媛(稱對方的女兒)" },
+                    { key: "尊", words: "尊夫人(稱對方的妻子)、尊姓大名(當面問人姓名時的敬詞)" },
+                    { key: "貴", words: "貴庚(問對方的年齡)、貴姓(問對方的姓氏)、貴校/貴公司(稱對方的學校/公司)、貴公館(稱對方的住處)" },
+                    { key: "賢", words: "賢喬梓(稱對方父子)、賢昆仲/賢昆玉(稱對方兄弟)、賢伉儷(稱對方夫婦)" },
+                    { key: "高", words: "高見(稱對方的見解)、高就(多用於詢問他人在何處任職)" }
                 ],
                 humble: [
-                    { key: "家", words: "家父/家嚴、家母/家慈、家兄、家姊" },
-                    { key: "舍", words: "舍弟、舍姪" },
-                    { key: "敝", words: "敝人、敝校、敝公司、敝業師" },
-                    { key: "拙", words: "拙見、拙著、拙荊(妻)" },
-                    { key: "小", words: "小犬(子)、小女(女)、小店" },
-                    { key: "薄", words: "薄禮、薄面" }
+                    { key: "家", words: "家父/家嚴(稱自己的父親)、家母/家慈(稱自己的母親)、家兄(稱自己的哥哥)、家姊(稱自己的姊姊) —— 稱自己的長輩和年長的平輩" },
+                    { key: "舍", words: "舍弟(稱自己的弟弟)、舍姪(稱自己的姪子) —— 稱年紀小於自己的平輩或晚輩" },
+                    { key: "敝", words: "敝人(稱自己)、敝校/敝公司(稱自己的學校/公司)、敝業師(稱自己的老師)" },
+                    { key: "拙", words: "拙見(稱自己的見解)、拙著(稱自己的作品)、拙荊(稱自己的妻子)" },
+                    { key: "小", words: "小犬(稱自己的兒子)、小女(稱自己的女兒)、小店(稱自己的店)" },
+                    { key: "薄", words: "薄禮(稱自己送的禮物：些許薄禮，敬請笑納)、薄面(稱自己的情面：看在我的薄面上)" }
                 ]
             }
         };
@@ -599,7 +602,7 @@
         };
 
         const LearningModule = ({ onBack }) => {
-            const [activeTab, setActiveTab] = useState('idioms'); 
+            const [activeTab, setActiveTab] = useState('intro'); 
             
             const tabs = [
                 { id: 'intro', label: '形音義與題解' },
@@ -679,10 +682,15 @@
                                     <div className="mt-8">
                                         <h4 className="font-bold text-xl text-stone-800 mb-3">{STUDY_CONTENT.intro.author.title}</h4>
                                         <div className="bg-stone-50 p-4 rounded-lg border-l-4 border-stone-400">
-                                            <p className="mb-4 text-stone-700">{STUDY_CONTENT.intro.author.motivation}</p>
-                                            <ul className="list-disc pl-5 space-y-2 text-stone-600">
+                                            <p className="mb-4 text-stone-700 leading-relaxed">{STUDY_CONTENT.intro.author.motivation}</p>
+                                            <ul className="list-disc pl-5 space-y-2 text-stone-600 mb-4">
                                                 {STUDY_CONTENT.intro.author.stages.map((stage, i) => <li key={i}>{stage}</li>)}
                                             </ul>
+                                            {STUDY_CONTENT.intro.author.extra && (
+                                                <div className="mt-4 p-3 bg-white rounded border border-stone-200 text-stone-600 text-sm">
+                                                    {STUDY_CONTENT.intro.author.extra}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -702,8 +710,8 @@
                                                 </div>
                                                 <p className="text-stone-700 mb-3 leading-relaxed">{row.content}</p>
                                                 {row.note !== "—" && (
-                                                    <div className="text-sm text-stone-500 bg-stone-50 p-2 rounded mb-4 border-l-2 border-indigo-200">
-                                                        <span className="font-bold">備註：</span>{row.note}
+                                                    <div className="text-sm text-stone-500 bg-stone-50 p-3 rounded mb-4 border-l-2 border-indigo-200 leading-relaxed">
+                                                        <span className="font-bold text-indigo-600 block mb-1">備註：</span>{row.note}
                                                     </div>
                                                 )}
                                                 {renderImage(row.image, row.category)}
@@ -720,8 +728,10 @@
                                         {STUDY_CONTENT.idioms.items.map((item, i) => (
                                             <div key={i} className="border border-stone-200 rounded-xl p-5 hover:shadow-md transition bg-white overflow-hidden">
                                                 <h4 className="font-bold text-xl text-emerald-700 mb-2">{item.name}</h4>
-                                                <p className="text-stone-600 mb-3">{item.mean}</p>
-                                                <div className="text-xs text-stone-400 bg-stone-100 inline-block px-2 py-1 rounded mb-4">出處：{item.source}</div>
+                                                <p className="text-stone-700 mb-3 text-lg">{item.mean}</p>
+                                                <div className="text-sm text-stone-500 bg-stone-50 p-3 rounded mb-4 border-l-2 border-emerald-200 italic">
+                                                    出處：{item.source}
+                                                </div>
                                                 {renderImage(item.image, item.name)}
                                             </div>
                                         ))}
@@ -732,13 +742,13 @@
                             {activeTab === 'grammar' && (
                                 <div className="space-y-6">
                                     <h3 className="text-2xl font-bold text-stone-800 border-b pb-2">{STUDY_CONTENT.grammar.title}</h3>
-                                    <div className="grid gap-6">
+                                    <div className="grid gap-4">
                                         {STUDY_CONTENT.grammar.items.map((item, i) => (
                                             <div key={i} className="border border-stone-200 rounded-xl p-5 hover:shadow-md transition bg-white overflow-hidden">
-                                                <div className="flex items-start justify-between">
-                                                    <div className="flex-1">
-                                                        <div className="font-bold text-xl text-stone-800 mb-2">{item.text}</div>
-                                                        <div className="text-orange-600 font-bold text-lg">→ {item.mean}</div>
+                                                <div className="flex flex-col">
+                                                    <div className="font-bold text-lg text-stone-800 mb-2">{item.text}</div>
+                                                    <div className="text-orange-600 font-medium pl-4 border-l-2 border-orange-200">
+                                                        {item.mean}
                                                     </div>
                                                 </div>
                                                 {renderImage(item.image, item.text)}
@@ -751,27 +761,33 @@
                             {activeTab === 'honorifics' && (
                                 <div className="space-y-8">
                                     <h3 className="text-2xl font-bold text-stone-800 border-b pb-2">{STUDY_CONTENT.honorifics.title}</h3>
-                                    <p className="bg-amber-50 p-3 rounded text-amber-800 text-sm">{STUDY_CONTENT.honorifics.intro}</p>
+                                    <div className="bg-amber-50 p-4 rounded-lg text-amber-900 text-sm leading-relaxed border border-amber-100">
+                                        {STUDY_CONTENT.honorifics.intro}
+                                    </div>
                                     
                                     <div>
-                                        <h4 className="text-lg font-bold text-orange-700 mb-3 flex items-center"><User className="w-5 h-5 mr-1"/> 敬詞 (稱呼對方)</h4>
-                                        <div className="bg-white border rounded-lg overflow-hidden">
+                                        <h4 className="text-lg font-bold text-orange-700 mb-3 flex items-center bg-orange-50 p-2 rounded w-fit">
+                                            <User className="w-5 h-5 mr-2"/> 敬詞 (稱呼對方)
+                                        </h4>
+                                        <div className="bg-white border rounded-xl overflow-hidden shadow-sm">
                                             {STUDY_CONTENT.honorifics.respect.map((row, i) => (
-                                                <div key={i} className="flex border-b last:border-0">
-                                                    <div className="w-16 bg-orange-50 p-3 flex items-center justify-center font-bold text-orange-800">{row.key}</div>
-                                                    <div className="p-3 flex-1 text-stone-700">{row.words}</div>
+                                                <div key={i} className="flex border-b last:border-0 hover:bg-stone-50 transition">
+                                                    <div className="w-20 bg-orange-50 p-4 flex items-center justify-center font-bold text-orange-800 text-lg border-r border-orange-100">{row.key}</div>
+                                                    <div className="p-4 flex-1 text-stone-700 flex items-center">{row.words}</div>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="text-lg font-bold text-emerald-700 mb-3 flex items-center"><User className="w-5 h-5 mr-1"/> 謙詞 (稱呼自己)</h4>
-                                        <div className="bg-white border rounded-lg overflow-hidden">
+                                        <h4 className="text-lg font-bold text-emerald-700 mb-3 flex items-center bg-emerald-50 p-2 rounded w-fit">
+                                            <User className="w-5 h-5 mr-2"/> 謙詞 (稱呼自己)
+                                        </h4>
+                                        <div className="bg-white border rounded-xl overflow-hidden shadow-sm">
                                             {STUDY_CONTENT.honorifics.humble.map((row, i) => (
-                                                <div key={i} className="flex border-b last:border-0">
-                                                    <div className="w-16 bg-emerald-50 p-3 flex items-center justify-center font-bold text-emerald-800">{row.key}</div>
-                                                    <div className="p-3 flex-1 text-stone-700">{row.words}</div>
+                                                <div key={i} className="flex border-b last:border-0 hover:bg-stone-50 transition">
+                                                    <div className="w-20 bg-emerald-50 p-4 flex items-center justify-center font-bold text-emerald-800 text-lg border-r border-emerald-100">{row.key}</div>
+                                                    <div className="p-4 flex-1 text-stone-700 flex items-center">{row.words}</div>
                                                 </div>
                                             ))}
                                         </div>
