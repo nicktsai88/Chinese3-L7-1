@@ -1081,6 +1081,7 @@
             const [showConfetti, setShowConfetti] = useState(false);
             const [showResumeDialog, setShowResumeDialog] = useState(false);
             const [isInitialized, setIsInitialized] = useState(false);
+            const [favorites, setFavorites] = useState(new Set());
 
             useEffect(() => {
                 // Check for saved quick quiz
@@ -1090,6 +1091,11 @@
                 } else {
                     startNewQuiz();
                 }
+
+                // Load favorites
+                const favSet = LocalDB.getFavorites();
+                const intSet = new Set(Array.from(favSet).map(id => parseInt(id)));
+                setFavorites(intSet);
             }, []);
 
             const startNewQuiz = () => {
@@ -1117,6 +1123,12 @@
             const handleRestart = () => {
                 startNewQuiz();
                 setShowResumeDialog(false);
+            };
+
+            const toggleFavorite = (qId) => {
+                const newFavs = LocalDB.toggleFavorite(qId);
+                const intSet = new Set(Array.from(newFavs).map(id => parseInt(id)));
+                setFavorites(intSet);
             };
 
             const handleAnswer = (q, option) => {
@@ -1186,7 +1198,12 @@
                                     <div key={q.id} className={`bg-white rounded-xl shadow-sm border p-6 transition duration-300 ${isAnswered ? (isCorrect ? 'border-emerald-200 bg-emerald-50/30' : 'border-red-200 bg-red-50/30') : 'border-stone-100 hover:shadow-md'}`}>
                                         <div className="flex justify-between items-start mb-4">
                                             <span className="text-xs font-bold text-stone-500 bg-stone-100 px-2 py-1 rounded">{q.category}</span>
-                                            <span className="text-stone-300 font-mono text-sm">#{index + 1}</span>
+                                            <div className="flex items-center space-x-3">
+                                                <button onClick={() => toggleFavorite(q.id)} className="text-stone-400 hover:text-rose-500 transition focus:outline-none">
+                                                    <Heart className={`w-5 h-5 ${favorites.has(q.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                                                </button>
+                                                <span className="text-stone-300 font-mono text-sm">#{index + 1}</span>
+                                            </div>
                                         </div>
                                         
                                         <h3 className="text-lg font-bold text-stone-800 mb-4">{q.question}</h3>
