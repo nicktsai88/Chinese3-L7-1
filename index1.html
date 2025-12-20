@@ -79,7 +79,7 @@
             BookOpen, PenTool, History, Heart, AlertCircle, CheckCircle, XCircle, 
             ChevronRight, LogOut, User, ArrowLeft, Zap, Volume2, Home, LayoutGrid, 
             Layers, ChevronDown, ChevronUp, Loader2, Sparkles, Image as ImageIcon, Download, ImageOff,
-            ListChecks, Trophy, RotateCcw, Save
+            ListChecks, Trophy
         } from 'lucide-react';
 
         // --- LocalStorage Database Helper ---
@@ -88,9 +88,7 @@
             USER: 'learning_app_user',
             HISTORY: 'learning_app_history',
             MISTAKES: 'learning_app_mistakes',
-            FAVORITES: 'learning_app_favorites',
-            PROGRESS_FULL: 'learning_app_progress_full',  // 新增：一般測驗進度
-            PROGRESS_QUICK: 'learning_app_progress_quick' // 新增：快速測驗進度
+            FAVORITES: 'learning_app_favorites'
         };
 
         const LocalDB = {
@@ -159,18 +157,6 @@
                 const favs = LocalDB.getFavorites();
                 favs.delete(id.toString());
                 localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(Array.from(favs)));
-            },
-
-            // --- 進度儲存功能 ---
-            saveProgress: (key, data) => {
-                localStorage.setItem(key, JSON.stringify(data));
-            },
-            getProgress: (key) => {
-                const data = localStorage.getItem(key);
-                return data ? JSON.parse(data) : null;
-            },
-            clearProgress: (key) => {
-                localStorage.removeItem(key);
             }
         };
         
@@ -841,35 +827,9 @@
             const [isAnswered, setIsAnswered] = useState(false);
             const [showConfetti, setShowConfetti] = useState(false);
             const [isSubmitting, setIsSubmitting] = useState(false);
-            const [hasSavedSession, setHasSavedSession] = useState(false);
-
-            useEffect(() => {
-                // Check if there is a saved session
-                const savedData = LocalDB.getProgress(STORAGE_KEYS.PROGRESS_FULL);
-                if (savedData && savedData.questions && savedData.questions.length > 0) {
-                    setHasSavedSession(true);
-                }
-            }, []);
 
             useEffect(() => {
                 if (!selectedCategory) return;
-                
-                // If "Resume" mode is active (indicated by a special flag or just handle it here)
-                if (selectedCategory === 'resume') {
-                    const savedData = LocalDB.getProgress(STORAGE_KEYS.PROGRESS_FULL);
-                    if (savedData) {
-                        setQuestions(savedData.questions);
-                        setCurrentQuestionIndex(savedData.currentQuestionIndex || 0);
-                        setAnswers(savedData.answers || {});
-                        setSelectedCategory(savedData.category); // Restore visual category
-                        // Check if current question is already answered
-                        if (savedData.answers && savedData.answers[savedData.questions[savedData.currentQuestionIndex || 0].id]) {
-                            setIsAnswered(true);
-                        }
-                    }
-                    return;
-                }
-
                 let filtered = [...ALL_QUESTIONS];
                 if (selectedCategory !== 'all') {
                     filtered = filtered.filter(q => q.category === selectedCategory);
@@ -879,9 +839,6 @@
                 setCurrentQuestionIndex(0);
                 setAnswers({});
                 setIsAnswered(false);
-                
-                // New session starts, clear old progress just in case, or overwrite it on first answer
-                LocalDB.clearProgress(STORAGE_KEYS.PROGRESS_FULL);
             }, [selectedCategory]);
 
             useEffect(() => {
@@ -900,19 +857,8 @@
                 if (isAnswered) return; 
                 const currentQ = questions[currentQuestionIndex];
                 const isCorrect = option === currentQ.answer;
-                
-                const newAnswers = { ...answers, [currentQ.id]: option };
-                setAnswers(newAnswers);
+                setAnswers(prev => ({ ...prev, [currentQ.id]: option }));
                 setIsAnswered(true);
-                
-                // Auto Save Progress
-                LocalDB.saveProgress(STORAGE_KEYS.PROGRESS_FULL, {
-                    category: selectedCategory,
-                    questions: questions,
-                    currentQuestionIndex: currentQuestionIndex,
-                    answers: newAnswers
-                });
-
                 if (isCorrect) {
                     playSound('correct');
                     setShowConfetti(true);
@@ -920,21 +866,6 @@
                 } else {
                     playSound('incorrect');
                 }
-            };
-
-            const handleNextQuestion = () => {
-                const nextIndex = currentQuestionIndex + 1;
-                setCurrentQuestionIndex(nextIndex);
-                setIsAnswered(false);
-                setShowConfetti(false);
-                
-                // Update Progress (just the index)
-                LocalDB.saveProgress(STORAGE_KEYS.PROGRESS_FULL, {
-                    category: selectedCategory,
-                    questions: questions,
-                    currentQuestionIndex: nextIndex,
-                    answers: answers
-                });
             };
 
             const handleSubmit = () => {
@@ -975,9 +906,6 @@
                             });
                         }
                     }
-                    
-                    // Clear Progress on Completion
-                    LocalDB.clearProgress(STORAGE_KEYS.PROGRESS_FULL);
 
                     onComplete({ score: Math.round((score / questions.length) * 100), details });
                 } catch (error) {
@@ -999,23 +927,7 @@
                 return (
                     <div className="h-full flex flex-col bg-stone-50">
                         <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center sticky top-0 z-10"><button onClick={onBack} className="flex items-center text-stone-600 hover:text-orange-600 mr-4"><ArrowLeft className="w-5 h-5 mr-1" /> 返回</button><h2 className="font-bold text-lg text-stone-800">選擇測驗單元</h2></div>
-                        <div className="p-6 overflow-y-auto">
-                            <div className="max-w-4xl mx-auto space-y-4">
-                                {hasSavedSession && (
-                                    <button onClick={() => setSelectedCategory('resume')} className="w-full text-left p-6 rounded-2xl shadow-sm border-2 border-emerald-400 bg-emerald-50 hover:bg-emerald-100 hover:shadow-md transition flex items-center group relative overflow-hidden">
-                                        <div className="absolute top-0 right-0 p-2"><span className="bg-emerald-200 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full">未完成</span></div>
-                                        <div className="p-3 rounded-full mr-4 bg-white shadow-sm"><RotateCcw className="w-6 h-6 text-emerald-600" /></div>
-                                        <div>
-                                            <h3 className="font-bold text-lg mb-1 text-emerald-900">繼續上次的測驗</h3>
-                                            <p className="text-sm text-emerald-700">您有一個未完成的測驗進度，點擊此處繼續作答。</p>
-                                        </div>
-                                    </button>
-                                )}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {categories.map(cat => (<button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`text-left p-6 rounded-2xl shadow-sm border-2 transition hover:shadow-md flex items-start ${cat.isAll ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 hover:border-yellow-400' : 'bg-white border-stone-100 hover:border-orange-200'}`}><div className={`p-3 rounded-full mr-4 ${cat.isAll ? 'bg-white shadow-sm' : 'bg-stone-50'}`}>{cat.icon}</div><div><h3 className={`font-bold text-lg mb-1 ${cat.isAll ? 'text-yellow-800' : 'text-stone-800'}`}>{cat.label}</h3><p className="text-sm text-stone-500">{cat.desc}</p></div></button>))}
-                                </div>
-                            </div>
-                        </div>
+                        <div className="p-6 overflow-y-auto"><div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">{categories.map(cat => (<button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`text-left p-6 rounded-2xl shadow-sm border-2 transition hover:shadow-md flex items-start ${cat.isAll ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 hover:border-yellow-400' : 'bg-white border-stone-100 hover:border-orange-200'}`}><div className={`p-3 rounded-full mr-4 ${cat.isAll ? 'bg-white shadow-sm' : 'bg-stone-50'}`}>{cat.icon}</div><div><h3 className={`font-bold text-lg mb-1 ${cat.isAll ? 'text-yellow-800' : 'text-stone-800'}`}>{cat.label}</h3><p className="text-sm text-stone-500">{cat.desc}</p></div></button>))}</div></div>
                     </div>
                 );
             }
@@ -1048,88 +960,32 @@
                     </div>
                     <div className="bg-white p-4 border-t flex justify-between items-center z-10 sticky bottom-0">
                         <div className="w-24"></div> 
-                        {isAnswered ? (currentQuestionIndex < questions.length - 1 ? (<button onClick={handleNextQuestion} className="px-8 py-3 bg-stone-800 text-white rounded-full hover:bg-stone-700 transition font-bold shadow-lg flex items-center animate-bounce-subtle">下一題 <ChevronRight className="w-5 h-5 ml-1" /></button>) : (<button onClick={handleSubmit} disabled={isSubmitting} className="px-8 py-3 bg-orange-600 text-white rounded-full hover:bg-orange-700 transition font-bold shadow-lg shadow-orange-200 flex items-center disabled:opacity-50 disabled:cursor-not-allowed">{isSubmitting ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> 處理中...</> : <>查看總成績 <CheckCircle className="w-5 h-5 ml-2" /></>}</button>)) : (<div className="text-stone-400 text-sm italic">請選擇一個答案以繼續</div>)}<div className="w-24"></div>
+                        {isAnswered ? (currentQuestionIndex < questions.length - 1 ? (<button onClick={() => { setIsAnswered(false); setShowConfetti(false); setCurrentQuestionIndex(c => c + 1); }} className="px-8 py-3 bg-stone-800 text-white rounded-full hover:bg-stone-700 transition font-bold shadow-lg flex items-center animate-bounce-subtle">下一題 <ChevronRight className="w-5 h-5 ml-1" /></button>) : (<button onClick={handleSubmit} disabled={isSubmitting} className="px-8 py-3 bg-orange-600 text-white rounded-full hover:bg-orange-700 transition font-bold shadow-lg shadow-orange-200 flex items-center disabled:opacity-50 disabled:cursor-not-allowed">{isSubmitting ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> 處理中...</> : <>查看總成績 <CheckCircle className="w-5 h-5 ml-2" /></>}</button>)) : (<div className="text-stone-400 text-sm italic">請選擇一個答案以繼續</div>)}<div className="w-24"></div>
                     </div>
                 </div>
             );
         };
-
-        const ResumeDialog = ({ onResume, onRestart }) => (
-            <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full animate-fade-in text-center">
-                    <div className="mx-auto w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mb-4">
-                        <RotateCcw className="w-8 h-8 text-sky-600" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-stone-800 mb-2">發現未完成的測驗</h3>
-                    <p className="text-stone-500 mb-8">系統記錄到您上次有未完成的快速測驗。是否要繼續作答？</p>
-                    <div className="space-y-3">
-                        <button onClick={onResume} className="w-full bg-sky-600 text-white py-3 rounded-xl font-bold hover:bg-sky-700 transition shadow-lg shadow-sky-200">
-                            繼續測驗
-                        </button>
-                        <button onClick={onRestart} className="w-full bg-stone-100 text-stone-600 py-3 rounded-xl font-bold hover:bg-stone-200 transition">
-                            重新開始
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
 
         const QuickQuizModule = ({ onBack }) => {
             const [questions, setQuestions] = useState([]);
             const [answers, setAnswers] = useState({});
             const [score, setScore] = useState(0);
             const [showConfetti, setShowConfetti] = useState(false);
-            const [showResumeDialog, setShowResumeDialog] = useState(false);
-            const [isInitialized, setIsInitialized] = useState(false);
 
             useEffect(() => {
-                // Check for saved quick quiz
-                const savedData = LocalDB.getProgress(STORAGE_KEYS.PROGRESS_QUICK);
-                if (savedData && savedData.questions && savedData.questions.length > 0) {
-                    setShowResumeDialog(true);
-                } else {
-                    startNewQuiz();
-                }
-            }, []);
-
-            const startNewQuiz = () => {
+                // Randomize all questions for quick mode
                 const shuffled = [...ALL_QUESTIONS].sort(() => 0.5 - Math.random());
                 setQuestions(shuffled);
-                setAnswers({});
-                setScore(0);
-                setIsInitialized(true);
-                LocalDB.clearProgress(STORAGE_KEYS.PROGRESS_QUICK);
-            };
-
-            const handleResume = () => {
-                const savedData = LocalDB.getProgress(STORAGE_KEYS.PROGRESS_QUICK);
-                if (savedData) {
-                    setQuestions(savedData.questions);
-                    setAnswers(savedData.answers || {});
-                    setScore(savedData.score || 0);
-                    setIsInitialized(true);
-                    setShowResumeDialog(false);
-                } else {
-                    startNewQuiz();
-                }
-            };
-
-            const handleRestart = () => {
-                startNewQuiz();
-                setShowResumeDialog(false);
-            };
+            }, []);
 
             const handleAnswer = (q, option) => {
                 if (answers[q.id]) return; // Already answered
 
                 const isCorrect = option === q.answer;
-                const newAnswers = { ...answers, [q.id]: option };
-                setAnswers(newAnswers);
-                
-                let newScore = score;
+                setAnswers(prev => ({ ...prev, [q.id]: option }));
+
                 if (isCorrect) {
-                    newScore = score + 1;
-                    setScore(newScore);
+                    setScore(s => s + 1);
                     playSound('correct');
                     setShowConfetti(true);
                     setTimeout(() => setShowConfetti(false), 1500);
@@ -1143,20 +999,10 @@
                         category: q.category
                     });
                 }
-
-                // Save Progress (Save full questions array to maintain order)
-                LocalDB.saveProgress(STORAGE_KEYS.PROGRESS_QUICK, {
-                    questions: questions,
-                    answers: newAnswers,
-                    score: newScore
-                });
             };
-
-            if (!isInitialized && !showResumeDialog) return <LoadingScreen />;
 
             return (
                 <div className="h-full flex flex-col bg-stone-50 relative">
-                    {showResumeDialog && <ResumeDialog onResume={handleResume} onRestart={handleRestart} />}
                     {showConfetti && <Confetti />}
                     
                     {/* Header with Scoreboard */}
