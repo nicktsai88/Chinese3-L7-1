@@ -78,7 +78,8 @@
         import { 
             BookOpen, PenTool, History, Heart, AlertCircle, CheckCircle, XCircle, 
             ChevronRight, LogOut, User, ArrowLeft, Zap, Volume2, Home, LayoutGrid, 
-            Layers, ChevronDown, ChevronUp, Loader2, Sparkles, Image as ImageIcon, Download, ImageOff
+            Layers, ChevronDown, ChevronUp, Loader2, Sparkles, Image as ImageIcon, Download, ImageOff,
+            ListChecks, Trophy
         } from 'lucide-react';
 
         // --- LocalStorage Database Helper ---
@@ -569,7 +570,8 @@
                     </header>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <button onClick={() => onNavigate('learn')} className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition group border-l-4 border-orange-500 text-left">
+                        {/* 學習介面 - 保持原樣 */}
+                        <button onClick={() => onNavigate('learn')} className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition group border-l-4 border-orange-500 text-left h-full">
                             <div className="flex items-center space-x-4 mb-2">
                                 <div className="bg-orange-100 p-3 rounded-full group-hover:bg-orange-200 transition"><BookOpen className="w-8 h-8 text-orange-600" /></div>
                                 <h2 className="text-xl font-bold text-stone-800">進入學習介面</h2>
@@ -577,13 +579,28 @@
                             <p className="text-stone-500 pl-16">瀏覽重點筆記、形音義、史記體例與成語典故。</p>
                         </button>
 
-                        <button onClick={() => onNavigate('quiz_setup')} className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition group border-l-4 border-amber-500 text-left">
-                            <div className="flex items-center space-x-4 mb-2">
-                                <div className="bg-amber-100 p-3 rounded-full group-hover:bg-amber-200 transition"><PenTool className="w-8 h-8 text-amber-600" /></div>
-                                <h2 className="text-xl font-bold text-stone-800">開始測驗</h2>
-                            </div>
-                            <p className="text-stone-500 pl-16">單元分類練習、挑戰全方位題庫，即時回饋。</p>
-                        </button>
+                        {/* 測驗介面 - 拆分為兩個按鈕 */}
+                        <div className="flex flex-col gap-4">
+                            <button onClick={() => onNavigate('quiz_setup')} className="bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition group border-l-4 border-amber-500 text-left flex-1">
+                                <div className="flex items-center space-x-4">
+                                    <div className="bg-amber-100 p-3 rounded-full group-hover:bg-amber-200 transition"><PenTool className="w-6 h-6 text-amber-600" /></div>
+                                    <div>
+                                        <h2 className="text-lg font-bold text-stone-800">一般測驗 (逐題)</h2>
+                                        <p className="text-stone-500 text-sm">單元分類、完整計分與詳解。</p>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <button onClick={() => onNavigate('quick_quiz')} className="bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition group border-l-4 border-sky-500 text-left flex-1">
+                                <div className="flex items-center space-x-4">
+                                    <div className="bg-sky-100 p-3 rounded-full group-hover:bg-sky-200 transition"><ListChecks className="w-6 h-6 text-sky-600" /></div>
+                                    <div>
+                                        <h2 className="text-lg font-bold text-stone-800">快速測驗 (刷題)</h2>
+                                        <p className="text-stone-500 text-sm">列表模式、即時回饋、錯題速記。</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 mt-8">
@@ -949,6 +966,121 @@
             );
         };
 
+        const QuickQuizModule = ({ onBack }) => {
+            const [questions, setQuestions] = useState([]);
+            const [answers, setAnswers] = useState({});
+            const [score, setScore] = useState(0);
+            const [showConfetti, setShowConfetti] = useState(false);
+
+            useEffect(() => {
+                // Randomize all questions for quick mode
+                const shuffled = [...ALL_QUESTIONS].sort(() => 0.5 - Math.random());
+                setQuestions(shuffled);
+            }, []);
+
+            const handleAnswer = (q, option) => {
+                if (answers[q.id]) return; // Already answered
+
+                const isCorrect = option === q.answer;
+                setAnswers(prev => ({ ...prev, [q.id]: option }));
+
+                if (isCorrect) {
+                    setScore(s => s + 1);
+                    playSound('correct');
+                    setShowConfetti(true);
+                    setTimeout(() => setShowConfetti(false), 1500);
+                } else {
+                    playSound('incorrect');
+                    // Instant add to mistakes
+                    LocalDB.addMistake({
+                        id: q.id,
+                        question: q.question,
+                        answer: q.answer,
+                        category: q.category
+                    });
+                }
+            };
+
+            return (
+                <div className="h-full flex flex-col bg-stone-50 relative">
+                    {showConfetti && <Confetti />}
+                    
+                    {/* Header with Scoreboard */}
+                    <div className="bg-white shadow-md border-b px-4 py-3 flex items-center justify-between sticky top-0 z-20">
+                        <button onClick={onBack} className="flex items-center text-stone-600 hover:text-sky-600">
+                            <ArrowLeft className="w-5 h-5 mr-1" /> 退出
+                        </button>
+                        
+                        <div className="flex items-center space-x-4">
+                            <div className="flex items-center bg-sky-50 px-3 py-1 rounded-full border border-sky-100">
+                                <Trophy className="w-4 h-4 text-sky-500 mr-2" />
+                                <span className="font-bold text-sky-700">{score}</span>
+                                <span className="text-stone-400 text-xs ml-1">答對</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Scrollable Question List */}
+                    <div className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
+                        <div className="max-w-3xl mx-auto space-y-6">
+                            {questions.map((q, index) => {
+                                const userAnswer = answers[q.id];
+                                const isAnswered = userAnswer !== undefined;
+                                const isCorrect = userAnswer === q.answer;
+
+                                return (
+                                    <div key={q.id} className={`bg-white rounded-xl shadow-sm border p-6 transition duration-300 ${isAnswered ? (isCorrect ? 'border-emerald-200 bg-emerald-50/30' : 'border-red-200 bg-red-50/30') : 'border-stone-100 hover:shadow-md'}`}>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <span className="text-xs font-bold text-stone-500 bg-stone-100 px-2 py-1 rounded">{q.category}</span>
+                                            <span className="text-stone-300 font-mono text-sm">#{index + 1}</span>
+                                        </div>
+                                        
+                                        <h3 className="text-lg font-bold text-stone-800 mb-4">{q.question}</h3>
+                                        
+                                        <div className="grid grid-cols-1 gap-2">
+                                            {q.options.map((opt, i) => {
+                                                let btnClass = "text-left px-4 py-3 rounded-lg border text-sm font-medium transition relative ";
+                                                
+                                                if (isAnswered) {
+                                                    if (opt === q.answer) {
+                                                        btnClass += "bg-emerald-500 text-white border-emerald-600 shadow-sm";
+                                                    } else if (opt === userAnswer) {
+                                                        btnClass += "bg-red-500 text-white border-red-600 shadow-sm";
+                                                    } else {
+                                                        btnClass += "bg-white text-stone-400 border-stone-100 opacity-60";
+                                                    }
+                                                } else {
+                                                    btnClass += "bg-white text-stone-700 border-stone-200 hover:bg-sky-50 hover:border-sky-200 hover:text-sky-700";
+                                                }
+
+                                                return (
+                                                    <button 
+                                                        key={i} 
+                                                        onClick={() => handleAnswer(q, opt)}
+                                                        disabled={isAnswered}
+                                                        className={btnClass}
+                                                    >
+                                                        <span className="mr-2 opacity-70">{String.fromCharCode(65 + i)}.</span>
+                                                        {opt}
+                                                        {isAnswered && opt === q.answer && <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4" />}
+                                                        {isAnswered && opt === userAnswer && opt !== q.answer && <XCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4" />}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                            
+                            <div className="text-center py-8 text-stone-400 text-sm">
+                                已經到底了！
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const ResultReview = ({ result, onExit }) => {
             return (
                 <div className="h-full bg-stone-50 overflow-y-auto">
@@ -1222,6 +1354,7 @@
             if (view === 'quiz_setup') {
                 return <FullQuizModule user={user} onBack={() => setView('dashboard')} onComplete={(res) => { setQuizResult(res); setView('quiz_result'); }} />;
             }
+            if (view === 'quick_quiz') return <QuickQuizModule onBack={() => setView('dashboard')} />;
             if (view === 'quiz_result') return <ResultReview result={quizResult} onExit={() => setView('dashboard')} />;
             if (view === 'history') return <ListView title="測驗歷史紀錄" type="history" user={user} onBack={() => setView('dashboard')} />;
             if (view === 'mistakes') return <ListView title="錯題本 (尚未掌握)" type="mistakes" user={user} onBack={() => setView('dashboard')} />;
