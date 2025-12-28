@@ -1282,7 +1282,7 @@
                                         
                                         <div className="grid grid-cols-1 gap-2 mb-4">
                                             {q.options.map((opt, i) => {
-                                                let btnClass = "text-left px-4 py-4 rounded-lg border text-lg font-medium transition relative ";
+                                                let btnClass = "text-left px-4 py-3 rounded-lg border text-sm font-medium transition relative ";
                                                 
                                                 if (isAnswered) {
                                                     if (opt === q.answer) {
@@ -1314,10 +1314,10 @@
 
                                         {/* Explanation Box */}
                                         {isAnswered && (
-                                            <div className="bg-yellow-50 rounded-lg p-5 border border-yellow-100 text-lg animate-fade-in relative overflow-hidden">
+                                            <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-100 text-sm animate-fade-in relative overflow-hidden">
                                                 <div className="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>
                                                 <div className="flex items-start">
-                                                    <Lightbulb className="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-1" />
+                                                    <Lightbulb className="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5" />
                                                     <div>
                                                         <span className="font-bold text-yellow-800 block mb-1">解析：</span>
                                                         <p className="text-stone-700 leading-relaxed">{q.explanation}</p>
