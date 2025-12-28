@@ -79,7 +79,7 @@
             BookOpen, PenTool, History, Heart, AlertCircle, CheckCircle, XCircle, 
             ChevronRight, LogOut, User, ArrowLeft, Zap, Volume2, Home, LayoutGrid, 
             Layers, ChevronDown, ChevronUp, Loader2, Sparkles, Image as ImageIcon, Download, ImageOff,
-            ListChecks, Trophy, RotateCcw, Save, Lightbulb
+            ListChecks, Trophy, RotateCcw, Save
         } from 'lucide-react';
 
         // --- LocalStorage Database Helper ---
@@ -335,109 +335,109 @@
             const q = [];
             let id = 1;
             // 1. 形音義與題解
-            q.push({ id: id++, category: "形音義與題解", question: "「先河」一詞的意思是？", options: ["河流的名字", "開創於先的人或事物本源", "已故的親人", "先進的河流技術"], answer: "開創於先的人或事物本源", explanation: "「先河」本指古代認為黃河源出星宿海，故稱星宿海為黃河的先河。後借代為開創於先的人，或指事物的本源。" });
-            q.push({ id: id++, category: "形音義與題解", question: "「直言抗辯」的意思是？", options: ["大聲爭吵", "婉轉地拒絕", "以正直的言論加以辯駁", "直接放棄辯解"], answer: "以正直的言論加以辯駁", explanation: "「直言」指正直的言論，「抗辯」指對抗、辯駁。形容臣子不畏權勢，據理力爭。" });
-            q.push({ id: id++, category: "形音義與題解", question: "「風骨」是指人的什麼？", options: ["身體骨骼", "品格、性格", "穿著風格", "書法筆勁"], answer: "品格、性格", explanation: "「風骨」原指人的風采骨格，後多用以比喻剛正不阿的品格或性格。" });
-            q.push({ id: id++, category: "形音義與題解", question: "「太史令」的主要職責不包含下列何者？", options: ["記載朝廷大事", "掌天文", "掌曆法", "管理刑獄"], answer: "管理刑獄", explanation: "太史令是漢武帝設置的官職，負責記載朝廷大事兼掌天文曆法。管理刑獄通常是廷尉的職責。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷受到的「宮刑」又稱為？", options: ["大辟", "腐刑", "墨刑", "劓刑"], answer: "腐刑", explanation: "宮刑是破壞生殖機能的刑罰，因為受刑後如同腐朽的木頭，無法開花結果，故又稱「腐刑」。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷在哪篇著作中提到「行莫醜於辱先，而莫大於宮刑」？", options: ["史記自序", "報任少卿書", "項羽本紀", "悲士不遇賦"], answer: "報任少卿書", explanation: "《報任少卿書》是司馬遷寫給好友任安的信，文中詳述了自己受宮刑的恥辱與發憤著書的心路歷程。" });
-            q.push({ id: id++, category: "形音義與題解", question: "關於司馬遷的生平，下列何者正確？", options: ["出生於武將世家", "父親司馬談曾任宰相", "因這李陵辯護而入獄", "一生平步青雲未受挫折"], answer: "因這李陵辯護而入獄", explanation: "司馬遷47歲時因替戰敗投降的李陵辯護，觸怒漢武帝而入獄，後被處以宮刑。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷著述《史記》的動機，可以用哪句話概括？", options: ["運籌帷幄之中", "究天人之際，通古今之變，成一家之言", "不鳴則已，一鳴驚人", "燕雀安知鴻鵠之志"], answer: "究天人之際，通古今之變，成一家之言", explanation: "這是司馬遷在《報任少卿書》中自述的宏願，意指探討天道與人事關係，通曉古今歷史演變，建立自己的一家學說。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷幾歲開始著手《史記》的著述？", options: ["20歲", "38歲", "42歲", "50歲"], answer: "42歲", explanation: "司馬遷在繼任太史令後，約於42歲時開始著手整理史料，撰寫《史記》。" });
-            q.push({ id: id++, category: "形音義與題解", question: "「詬」字的讀音與意思為何？", options: ["ㄍㄡˋ，恥辱", "ㄏㄡˋ，後悔", "ㄍㄡˇ，苟且", "ㄏㄡˊ，諸侯"], answer: "ㄍㄡˋ，恥辱", explanation: "「詬」（音ㄍㄡˋ）意指恥辱、辱罵。在文中指司馬遷遭受的奇恥大辱。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷的父親名為？", options: ["司馬談", "司馬懿", "司馬光", "司馬相如"], answer: "司馬談", explanation: "司馬遷的父親是司馬談，曾任太史令，對司馬遷的史學志向有深遠影響。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷出獄後，漢武帝升他為何種官職？", options: ["太史令", "中書令", "廷尉", "丞相"], answer: "中書令", explanation: "漢武帝後來察覺司馬遷是無辜的，且欣賞其才華，故任用他為中書令（皇帝的機要秘書）。" });
-            q.push({ id: id++, category: "形音義與題解", question: "下列關於司馬遷「壯遊南北期」的敘述何者正確？", options: ["發生在47~56歲", "主要為了逃避刑罰", "發生在20~36歲", "完全沒有發生過"], answer: "發生在20~36歲", explanation: "司馬遷年輕時（20~36歲）曾遊歷天下，考察風土人情，為後來撰寫《史記》累積了豐富的實地資料。" });
-            q.push({ id: id++, category: "形音義與題解", question: "《報任少卿書》是司馬遷寫給誰的信？", options: ["李陵", "漢武帝", "任安", "父親"], answer: "任安", explanation: "任少卿即任安，是司馬遷的好友。這封信是司馬遷回覆任安的信，文中抒發了自己的心志。" });
-            q.push({ id: id++, category: "形音義與題解", question: "司馬遷受宮刑時約為幾歲？", options: ["38歲", "42歲", "48歲", "50歲"], answer: "48歲", explanation: "司馬遷在47歲入獄，48歲時為了完成《史記》選擇忍辱接受宮刑以保全性命。" });
+            q.push({ id: id++, category: "形音義與題解", question: "「先河」一詞的意思是？", options: ["河流的名字", "開創於先的人或事物本源", "已故的親人", "先進的河流技術"], answer: "開創於先的人或事物本源" });
+            q.push({ id: id++, category: "形音義與題解", question: "「直言抗辯」的意思是？", options: ["大聲爭吵", "婉轉地拒絕", "以正直的言論加以辯駁", "直接放棄辯解"], answer: "以正直的言論加以辯駁" });
+            q.push({ id: id++, category: "形音義與題解", question: "「風骨」是指人的什麼？", options: ["身體骨骼", "品格、性格", "穿著風格", "書法筆勁"], answer: "品格、性格" });
+            q.push({ id: id++, category: "形音義與題解", question: "「太史令」的主要職責不包含下列何者？", options: ["記載朝廷大事", "掌天文", "掌曆法", "管理刑獄"], answer: "管理刑獄" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷受到的「宮刑」又稱為？", options: ["大辟", "腐刑", "墨刑", "劓刑"], answer: "腐刑" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷在哪篇著作中提到「行莫醜於辱先，而莫大於宮刑」？", options: ["史記自序", "報任少卿書", "項羽本紀", "悲士不遇賦"], answer: "報任少卿書" });
+            q.push({ id: id++, category: "形音義與題解", question: "關於司馬遷的生平，下列何者正確？", options: ["出生於武將世家", "父親司馬談曾任宰相", "因這李陵辯護而入獄", "一生平步青雲未受挫折"], answer: "因這李陵辯護而入獄" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷著述《史記》的動機，可以用哪句話概括？", options: ["運籌帷幄之中", "究天人之際，通古今之變，成一家之言", "不鳴則已，一鳴驚人", "燕雀安知鴻鵠之志"], answer: "究天人之際，通古今之變，成一家之言" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷幾歲開始著手《史記》的著述？", options: ["20歲", "38歲", "42歲", "50歲"], answer: "42歲" });
+            q.push({ id: id++, category: "形音義與題解", question: "「詬」字的讀音與意思為何？", options: ["ㄍㄡˋ，恥辱", "ㄏㄡˋ，後悔", "ㄍㄡˇ，苟且", "ㄏㄡˊ，諸侯"], answer: "ㄍㄡˋ，恥辱" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷的父親名為？", options: ["司馬談", "司馬懿", "司馬光", "司馬相如"], answer: "司馬談" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷出獄後，漢武帝升他為何種官職？", options: ["太史令", "中書令", "廷尉", "丞相"], answer: "中書令" });
+            q.push({ id: id++, category: "形音義與題解", question: "下列關於司馬遷「壯遊南北期」的敘述何者正確？", options: ["發生在47~56歲", "主要為了逃避刑罰", "發生在20~36歲", "完全沒有發生過"], answer: "發生在20~36歲" });
+            q.push({ id: id++, category: "形音義與題解", question: "《報任少卿書》是司馬遷寫給誰的信？", options: ["李陵", "漢武帝", "任安", "父親"], answer: "任安" });
+            q.push({ id: id++, category: "形音義與題解", question: "司馬遷受宮刑時約為幾歲？", options: ["38歲", "42歲", "48歲", "50歲"], answer: "48歲" });
 
             // 2. 史記體例表格
-            q.push({ id: id++, category: "史記體例表格", question: "《史記》是中國史上首部什麼體例的史書？", options: ["編年體通史", "紀傳體通史", "國別史", "斷代史"], answer: "紀傳體通史", explanation: "《史記》以人物傳記為中心來記載歷史，故稱為「紀傳體」；記載從黃帝到漢武帝的歷史，故為「通史」。" });
-            q.push({ id: id++, category: "史記體例表格", question: "《史記》中記載歷代帝王事蹟，屬於全書提綱的是哪一類？", options: ["世家", "列傳", "本紀", "表"], answer: "本紀", explanation: "「本紀」按年代記載帝王大事，是全書的綱領。如《五帝本紀》、《秦始皇本紀》。" });
-            q.push({ id: id++, category: "史記體例表格", question: "哪位人物並非帝王，但因影響世局重大而被司馬遷破例列入「本紀」？", options: ["孔子", "陳涉", "項羽", "韓信"], answer: "項羽", explanation: "項羽雖未稱帝，但在秦漢之際掌握天下實權，號稱「西楚霸王」，故司馬遷將其列入《項羽本紀》。" });
-            q.push({ id: id++, category: "史記體例表格", question: "記載諸侯王侯興衰歷史的是哪一類？", options: ["本紀", "世家", "列傳", "書"], answer: "世家", explanation: "「世家」主要記載諸侯王侯的家族興衰，世代相傳，故稱世家。" });
-            q.push({ id: id++, category: "史記體例表格", question: "孔子被列入《史記》的哪一類？", options: ["本紀", "世家", "列傳", "表"], answer: "世家", explanation: "孔子雖非王侯，但其儒家學說影響後世深遠，被尊為「至聖」，故司馬遷破例將其列入《孔子世家》。" });
-            q.push({ id: id++, category: "史記體例表格", question: "中國首位起義的平民陳涉，被列入哪一類？", options: ["列傳", "本紀", "世家", "書"], answer: "世家", explanation: "陳涉是秦末農民起義領袖，曾自立為王，對推翻秦朝有重要影響，故破例列入《陳涉世家》。" });
-            q.push({ id: id++, category: "史記體例表格", question: "專門記載典章制度（如天文、曆法、水利）的是？", options: ["表", "書", "本紀", "列傳"], answer: "書", explanation: "「書」專門記載各種典章制度，如禮樂、音律、曆法、天文、封禪、水利、經濟等。" });
-            q.push({ id: id++, category: "史記體例表格", question: "《史記》中的「表」主要作用是？", options: ["記載帝王家世", "用表格整理大事，使歷史脈絡明晰", "論述天文地理", "記敘平民事蹟"], answer: "用表格整理大事，使歷史脈絡明晰", explanation: "「表」以表格形式排列歷史大事和人物世系，用以輔助本紀和列傳，使歷史脈絡一目了然。" });
-            q.push({ id: id++, category: "史記體例表格", question: "「呂后」被司馬遷列入哪一類體例？", options: ["列傳", "世家", "本紀", "書"], answer: "本紀", explanation: "呂后在漢惠帝時實際掌握朝政，行使皇帝權力，故司馬遷將其列入《呂太后本紀》。" });
-            q.push({ id: id++, category: "史記體例表格", question: "下列關於「列傳」的敘述，何者錯誤？", options: ["是司馬遷首創的體例", "專記帝王的逐年大事", "包含專傳、合傳、類傳", "記載社會各階層代表人物"], answer: "專記帝王的逐年大事", explanation: "記載帝王逐年大事的是「本紀」。列傳主要記載人臣及各方面代表人物。" });
-            q.push({ id: id++, category: "史記體例表格", question: "《刺客列傳》屬於哪一種列傳寫法？", options: ["專傳", "合傳", "類傳", "自傳"], answer: "類傳", explanation: "「類傳」是將同一類性質的人物合寫一傳，《刺客列傳》即記載了曹沫、專諸、豫讓、聶政、荊軻等刺客。" });
-            q.push({ id: id++, category: "史記體例表格", question: "《史記》全書共有多少卷？", options: ["100卷", "130卷", "70卷", "12卷"], answer: "130卷", explanation: "《史記》全書包括本紀12卷、表10卷、書8卷、世家30卷、列傳70卷，共130卷。" });
-            q.push({ id: id++, category: "史記體例表格", question: "「本紀」共有幾卷？", options: ["12卷", "10卷", "30卷", "70卷"], answer: "12卷", explanation: "本紀共有12卷，記敘從黃帝到漢武帝的帝王歷史。" });
-            q.push({ id: id++, category: "史記體例表格", question: "「世家」共有幾卷？", options: ["12卷", "8卷", "30卷", "70卷"], answer: "30卷", explanation: "世家共有30卷，主要記述諸侯王侯的歷史。" });
-            q.push({ id: id++, category: "史記體例表格", question: "「列傳」共有幾卷？", options: ["30卷", "70卷", "130卷", "10卷"], answer: "70卷", explanation: "列傳共有70卷，是《史記》中篇幅最多的一部分，記載各階層人物。" });
-            q.push({ id: id++, category: "史記體例表格", question: "《史記》最後一篇為何？", options: ["孔子世家", "太史公自序", "貨殖列傳", "項羽本紀"], answer: "太史公自序", explanation: "《太史公自序》是司馬遷的自傳，敘述家世、生平及寫作《史記》的動機與經過，置於全書之末。" });
-            q.push({ id: id++, category: "史記體例表格", question: "「外戚」因為后妃勢力影響朝廷，被破例列入哪一類？", options: ["本紀", "世家", "列傳", "表"], answer: "世家", explanation: "外戚（皇帝的母族或妻族）勢力龐大時可影響國政，故司馬遷將《外戚世家》列入世家。" });
-            q.push({ id: id++, category: "史記體例表格", question: "記載「匈奴」歷史的是哪一類？", options: ["本紀", "書", "世家", "列傳"], answer: "列傳", explanation: "外國及少數民族的歷史通常記載於列傳中，如《匈奴列傳》、《朝鮮列傳》。" });
-            q.push({ id: id++, category: "史記體例表格", question: "下列何者屬於「書」的內容？", options: ["歷代帝王世系", "經濟、水利、禮樂", "諸侯興衰", "平民百姓事蹟"], answer: "經濟、水利、禮樂", explanation: "「書」專記典章制度，如《平準書》（經濟）、《河渠書》（水利）、《禮書》、《樂書》等。" });
-            q.push({ id: id++, category: "史記體例表格", question: "《史記》中用來補足「本紀」紀年不足，展示歷史發展脈絡的是？", options: ["表", "書", "世家", "列傳"], answer: "表", explanation: "「表」以年表形式串聯歷史事件，彌補本紀在時間跨度上的敘述不足，使歷史脈絡更清晰。" });
+            q.push({ id: id++, category: "史記體例表格", question: "《史記》是中國史上首部什麼體例的史書？", options: ["編年體通史", "紀傳體通史", "國別史", "斷代史"], answer: "紀傳體通史" });
+            q.push({ id: id++, category: "史記體例表格", question: "《史記》中記載歷代帝王事蹟，屬於全書提綱的是哪一類？", options: ["世家", "列傳", "本紀", "表"], answer: "本紀" });
+            q.push({ id: id++, category: "史記體例表格", question: "哪位人物並非帝王，但因影響世局重大而被司馬遷破例列入「本紀」？", options: ["孔子", "陳涉", "項羽", "韓信"], answer: "項羽" });
+            q.push({ id: id++, category: "史記體例表格", question: "記載諸侯王侯興衰歷史的是哪一類？", options: ["本紀", "世家", "列傳", "書"], answer: "世家" });
+            q.push({ id: id++, category: "史記體例表格", question: "孔子被列入《史記》的哪一類？", options: ["本紀", "世家", "列傳", "表"], answer: "世家" });
+            q.push({ id: id++, category: "史記體例表格", question: "中國首位起義的平民陳涉，被列入哪一類？", options: ["列傳", "本紀", "世家", "書"], answer: "世家" });
+            q.push({ id: id++, category: "史記體例表格", question: "專門記載典章制度（如天文、曆法、水利）的是？", options: ["表", "書", "本紀", "列傳"], answer: "書" });
+            q.push({ id: id++, category: "史記體例表格", question: "《史記》中的「表」主要作用是？", options: ["記載帝王家世", "用表格整理大事，使歷史脈絡明晰", "論述天文地理", "記敘平民事蹟"], answer: "用表格整理大事，使歷史脈絡明晰" });
+            q.push({ id: id++, category: "史記體例表格", question: "「呂后」被司馬遷列入哪一類體例？", options: ["列傳", "世家", "本紀", "書"], answer: "本紀" });
+            q.push({ id: id++, category: "史記體例表格", question: "下列關於「列傳」的敘述，何者錯誤？", options: ["是司馬遷首創的體例", "專記帝王的逐年大事", "包含專傳、合傳、類傳", "記載社會各階層代表人物"], answer: "專記帝王的逐年大事" });
+            q.push({ id: id++, category: "史記體例表格", question: "《刺客列傳》屬於哪一種列傳寫法？", options: ["專傳", "合傳", "類傳", "自傳"], answer: "類傳" });
+            q.push({ id: id++, category: "史記體例表格", question: "《史記》全書共有多少卷？", options: ["100卷", "130卷", "70卷", "12卷"], answer: "130卷" });
+            q.push({ id: id++, category: "史記體例表格", question: "「本紀」共有幾卷？", options: ["12卷", "10卷", "30卷", "70卷"], answer: "12卷" });
+            q.push({ id: id++, category: "史記體例表格", question: "「世家」共有幾卷？", options: ["12卷", "8卷", "30卷", "70卷"], answer: "30卷" });
+            q.push({ id: id++, category: "史記體例表格", question: "「列傳」共有幾卷？", options: ["30卷", "70卷", "130卷", "10卷"], answer: "70卷" });
+            q.push({ id: id++, category: "史記體例表格", question: "《史記》最後一篇為何？", options: ["孔子世家", "太史公自序", "貨殖列傳", "項羽本紀"], answer: "太史公自序" });
+            q.push({ id: id++, category: "史記體例表格", question: "「外戚」因為后妃勢力影響朝廷，被破例列入哪一類？", options: ["本紀", "世家", "列傳", "表"], answer: "世家" });
+            q.push({ id: id++, category: "史記體例表格", question: "記載「匈奴」歷史的是哪一類？", options: ["本紀", "書", "世家", "列傳"], answer: "列傳" });
+            q.push({ id: id++, category: "史記體例表格", question: "下列何者屬於「書」的內容？", options: ["歷代帝王世系", "經濟、水利、禮樂", "諸侯興衰", "平民百姓事蹟"], answer: "經濟、水利、禮樂" });
+            q.push({ id: id++, category: "史記體例表格", question: "《史記》中用來補足「本紀」紀年不足，展示歷史發展脈絡的是？", options: ["表", "書", "世家", "列傳"], answer: "表" });
 
             // 3. 成語典故
-            q.push({ id: id++, category: "成語典故", question: "「燕雀安知鴻鵠之志」比喻什麼？", options: ["朋友間的誤會", "一般人無法明白雄才大略者的遠大志向", "鳥類的習性不同", "地位高低無法溝通"], answer: "一般人無法明白雄才大略者的遠大志向", explanation: "燕雀是小鳥，鴻鵠是大鳥。比喻見識短淺的人無法理解英雄豪傑的遠大志向。語出《史記·陳涉世家》。" });
-            q.push({ id: id++, category: "成語典故", question: "「桃李不言，下自成蹊」出自《史記》哪一篇？", options: ["項羽本紀", "陳涉世家", "史記-李將軍列傳", "孔子世家"], answer: "史記-李將軍列傳", explanation: "司馬遷用這句話讚美「飛將軍」李廣，雖然他不善言辭，但因待人真誠，深受部下愛戴，如同桃李樹下自然會被踩出一條路。" });
-            q.push({ id: id++, category: "成語典故", question: "「運籌帷幄之中，決勝千里之外」是用來稱讚誰？", options: ["韓信", "張良", "蕭何", "陳平"], answer: "張良", explanation: "劉邦稱讚張良（子房）善於在軍帳中策劃謀略，就能決定千里之外戰場的勝負。" });
-            q.push({ id: id++, category: "成語典故", question: "「無顏見江東父老」與哪位歷史人物有關？", options: ["劉邦", "項羽", "韓信", "張釋之"], answer: "項羽", explanation: "項羽兵敗垓下，退至烏江，烏江亭長勸他渡江稱王，項羽覺得愧對江東父老，選擇自刎。" });
-            q.push({ id: id++, category: "成語典故", question: "「不鳴則已，一鳴驚人」最初是用來形容哪種動物？", options: ["龍", "鳳凰", "大鳥", "麒麟"], answer: "大鳥", explanation: "淳于髡用一隻停在王宮三年不飛不鳴的大鳥來諷諫齊威王，比喻人平時默默無聞，一旦施展才華便令人震驚。" });
-            q.push({ id: id++, category: "成語典故", question: "「桃李不言，下自成蹊」中的「蹊」意思為何？", options: ["溪流", "小路", "果實", "樹蔭"], answer: "小路", explanation: "「蹊」指小路。意思是桃樹李樹不會說話，但因花朵美、果實甜，人們常去採賞，樹下自然踩出一條小路。" });
-            q.push({ id: id++, category: "成語典故", question: "「運籌帷幄」中的「帷幄」是指？", options: ["軍營中的帳幕", "古代的戰車", "皇帝的宮殿", "書房"], answer: "軍營中的帳幕", explanation: "「帷幄」指軍營中的帳幕。運籌帷幄指在後方軍帳中策劃軍事行動。" });
-            q.push({ id: id++, category: "成語典故", question: "項羽說「縱江東父兄憐而王我，我何面目見之？」這句話衍生出哪個成語？", options: ["四面楚歌", "東山再起", "無顏見江東父老", "破釜沉舟"], answer: "無顏見江東父老", explanation: "項羽自覺帶領八千江東子弟出征，卻無一生還，感到羞愧，因此說沒臉見江東父老。" });
-            q.push({ id: id++, category: "成語典故", question: "「燕雀安知鴻鵠之志」出自《史記》的哪一篇？", options: ["項羽本紀", "史記-陳涉世家", "孔子世家", "留侯世家"], answer: "史記-陳涉世家", explanation: "陳涉年輕時受僱耕田，曾發出此感嘆，表達不甘久居人下的志向。" });
-            q.push({ id: id++, category: "成語典故", question: "「不鳴則已，一鳴驚人」這句話出自《史記》哪一篇傳記？", options: ["史記-淳于髡傳", "刺客列傳", "游俠列傳", "酷吏列傳"], answer: "史記-淳于髡傳", explanation: "記載於《史記·滑稽列傳》中的淳于髡傳。淳于髡以此隱喻勸諫齊威王振作。" });
-            q.push({ id: id++, category: "成語典故", question: "「鴻鵠」在「燕雀安知鴻鵠之志」中借代為？", options: ["小人", "君子", "英雄豪傑", "普通百姓"], answer: "英雄豪傑", explanation: "鴻鵠是大雁或天鵝，飛得高遠，故藉以比喻志向遠大的英雄豪傑。" });
-            q.push({ id: id++, category: "成語典故", question: "「桃李不言，下自成蹊」常用來比喻什麼？", options: ["為人真誠，自能感動別人", "果實甜美", "交通便利", "口才很好"], answer: "為人真誠，自能感動別人", explanation: "比喻為人真誠篤實，自然能感召人心，受到人們的敬仰。" });
-            q.push({ id: id++, category: "成語典故", question: "「運籌帷幄」這句話是在哪一篇中劉邦稱讚張良的？", options: ["高祖本紀", "項羽本紀", "留侯世家", "淮陰侯列傳"], answer: "高祖本紀", explanation: "出自《史記·高祖本紀》，劉邦統一天下後論功行賞時對張良的評價。" });
-            q.push({ id: id++, category: "成語典故", question: "項羽被困在哪裡時，發出了「無顏見江東父老」的感嘆？", options: ["垓下", "烏江", "咸陽", "鴻門"], answer: "烏江", explanation: "項羽從垓下突圍逃至烏江畔，面對滔滔江水發出此感嘆，隨後自刎。" });
-            q.push({ id: id++, category: "成語典故", question: "「燕雀」在成語中比喻什麼樣的人？", options: ["志向遠大的人", "見識短淺的一般人", "說話輕聲細語的人", "動作敏捷的人"], answer: "見識短淺的一般人", explanation: "燕雀飛不高，視野有限，故比喻見識短淺、胸無大志的一般人。" });
+            q.push({ id: id++, category: "成語典故", question: "「燕雀安知鴻鵠之志」比喻什麼？", options: ["朋友間的誤會", "一般人無法明白雄才大略者的遠大志向", "鳥類的習性不同", "地位高低無法溝通"], answer: "一般人無法明白雄才大略者的遠大志向" });
+            q.push({ id: id++, category: "成語典故", question: "「桃李不言，下自成蹊」出自《史記》哪一篇？", options: ["項羽本紀", "陳涉世家", "史記-李將軍列傳", "孔子世家"], answer: "史記-李將軍列傳" });
+            q.push({ id: id++, category: "成語典故", question: "「運籌帷幄之中，決勝千里之外」是用來稱讚誰？", options: ["韓信", "張良", "蕭何", "陳平"], answer: "張良" });
+            q.push({ id: id++, category: "成語典故", question: "「無顏見江東父老」與哪位歷史人物有關？", options: ["劉邦", "項羽", "韓信", "張釋之"], answer: "項羽" });
+            q.push({ id: id++, category: "成語典故", question: "「不鳴則已，一鳴驚人」最初是用來形容哪種動物？", options: ["龍", "鳳凰", "大鳥", "麒麟"], answer: "大鳥" });
+            q.push({ id: id++, category: "成語典故", question: "「桃李不言，下自成蹊」中的「蹊」意思為何？", options: ["溪流", "小路", "果實", "樹蔭"], answer: "小路" });
+            q.push({ id: id++, category: "成語典故", question: "「運籌帷幄」中的「帷幄」是指？", options: ["軍營中的帳幕", "古代的戰車", "皇帝的宮殿", "書房"], answer: "軍營中的帳幕" });
+            q.push({ id: id++, category: "成語典故", question: "項羽說「縱江東父兄憐而王我，我何面目見之？」這句話衍生出哪個成語？", options: ["四面楚歌", "東山再起", "無顏見江東父老", "破釜沉舟"], answer: "無顏見江東父老" });
+            q.push({ id: id++, category: "成語典故", question: "「燕雀安知鴻鵠之志」出自《史記》的哪一篇？", options: ["項羽本紀", "史記-陳涉世家", "孔子世家", "留侯世家"], answer: "史記-陳涉世家" });
+            q.push({ id: id++, category: "成語典故", question: "「不鳴則已，一鳴驚人」這句話出自《史記》哪一篇傳記？", options: ["史記-淳于髡傳", "刺客列傳", "游俠列傳", "酷吏列傳"], answer: "史記-淳于髡傳" });
+            q.push({ id: id++, category: "成語典故", question: "「鴻鵠」在「燕雀安知鴻鵠之志」中借代為？", options: ["小人", "君子", "英雄豪傑", "普通百姓"], answer: "英雄豪傑" });
+            q.push({ id: id++, category: "成語典故", question: "「桃李不言，下自成蹊」常用來比喻什麼？", options: ["為人真誠，自能感動別人", "果實甜美", "交通便利", "口才很好"], answer: "為人真誠，自能感動別人" });
+            q.push({ id: id++, category: "成語典故", question: "「運籌帷幄」這句話是在哪一篇中劉邦稱讚張良的？", options: ["高祖本紀", "項羽本紀", "留侯世家", "淮陰侯列傳"], answer: "高祖本紀" });
+            q.push({ id: id++, category: "成語典故", question: "項羽被困在哪裡時，發出了「無顏見江東父老」的感嘆？", options: ["垓下", "烏江", "咸陽", "鴻門"], answer: "烏江" });
+            q.push({ id: id++, category: "成語典故", question: "「燕雀」在成語中比喻什麼樣的人？", options: ["志向遠大的人", "見識短淺的一般人", "說話輕聲細語的人", "動作敏捷的人"], answer: "見識短淺的一般人" });
 
             // 4. 課文詞語與語法
-            q.push({ id: id++, category: "課文詞語與語法", question: "「釋之為廷尉」的「為」字解釋為？", options: ["為了", "因為", "擔任", "被"], answer: "擔任", explanation: "「為」在此作動詞用，意指「擔任」、「做」官。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「久之」的「之」字詞性與意義是？", options: ["代詞，指時間", "動詞，往", "助詞，無義", "介詞，的"], answer: "助詞，無義", explanation: "「久之」的「之」是語助詞，附在時間詞後，無實義，僅調節音節。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「廷尉當是也」的「當」字解釋為？", options: ["判決", "應當", "阻擋", "擔任"], answer: "判決", explanation: "「當」在此讀四聲（ㄉㄤˋ），通「斷」，意指判決、判罪。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「廷尉當是也」的「是」字解釋為？", options: ["此、這", "正確的", "贊同", "事情"], answer: "正確的", explanation: "「是」在此指「正確的」、「對的」，表示文帝認同張釋之的判決。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「不信於民」的「於」字解釋為？", options: ["在", "給", "被", "從"], answer: "被", explanation: "這是被動句式，「於」引出被動的對象，意即「被人民信任」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「黔首」一詞意指？", options: ["皇帝", "貴族", "官員", "平民百姓"], answer: "平民百姓", explanation: "秦代稱百姓為黔首，因平民以黑布包頭（黔為黑色），故借代為平民。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「良」久的「良」字解釋為？", options: ["良好", "很、甚", "善良", "稍微"], answer: "很、甚", explanation: "「良」在此作副詞，表程度高，意為「很」、「甚」。良久即很久。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「乘輿」在課文中借代為？", options: ["馬車", "皇帝", "車夫", "馬匹"], answer: "皇帝", explanation: "乘輿原指君王乘坐的車子，後借代指皇帝本人。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「上使立誅之」中的「使」字解釋為？", options: ["派遣", "使用", "假使", "命令"], answer: "假使", explanation: "「使」在此作連接詞，意為「假使」、「如果」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「一傾而天下用法皆為輕重」中的「傾」字意思為？", options: ["傾倒", "傾斜、偏差", "傾向", "完畢"], answer: "傾斜、偏差", explanation: "「傾」指傾斜不正，在此比喻執法標準不公，有所偏差。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「是法不信於民也」中的「是」字解釋為？", options: ["正確", "是", "此、這", "凡是"], answer: "此、這", explanation: "「是」在此作指示代詞，意為「這」、「此」。是法即這法律。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「今法如此而更重之」中的「而」字解釋為？", options: ["而且", "卻/假如", "然後", "所以"], answer: "卻/假如", explanation: "「而」在此表轉折，意為「卻」；或可解為假設語氣「假如」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「唯陛下察之」的「之」字是指？", options: ["張釋之", "犯人", "這件事（執法公正的重要性）", "廷尉"], answer: "這件事（執法公正的重要性）", explanation: "「之」為代詞，指代前文所述執法不一會導致民不聊生的道理。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「涇渭分明」比喻什麼？", options: ["河水清澈", "是非好壞區別得非常清楚", "風景優美", "兩人感情分離"], answer: "是非好壞區別得非常清楚", explanation: "涇河水濁，渭河水清，匯流處清濁分明。比喻是非好壞界限清楚。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「無隙可乘」的意思是？", options: ["沒有車可以搭", "沒有空隙", "沒有可以利用的機會", "時間緊迫"], answer: "沒有可以利用的機會", explanation: "隙指空隙、漏洞。比喻做事嚴密，沒有任何漏洞可讓對方利用。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「下殺上」稱為什麼？", options: ["殺", "弒", "戮", "誅"], answer: "弒", explanation: "古代對殺人有特定稱呼，臣殺君、子殺父等下對上的殺害稱為「弒」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「上殺下」稱為什麼？", options: ["殺", "弒", "戮", "誅"], answer: "戮", explanation: "上對下的殺害，或殺戮戰俘，稱為「戮」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「殺有罪之人」稱為什麼？", options: ["殺", "弒", "戮", "誅"], answer: "誅", explanation: "討伐或殺死有罪的人，稱為「誅」，如「誅殺」、「伏誅」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「於是使騎捕」中的「騎」字詞性與意思為？", options: ["動詞，騎馬", "名詞，騎兵", "名詞，馬匹", "形容詞，快速的"], answer: "名詞，騎兵", explanation: "「騎」在此作名詞用，指「騎兵」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「匿橋下」的「匿」意思為？", options: ["隱藏", "溺水", "逃跑", "睡覺"], answer: "隱藏", explanation: "「匿」意為躲藏、隱藏。如「銷聲匿跡」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「見乘輿車騎即走耳」的「走」意思為？", options: ["走路", "跑", "離開", "發呆"], answer: "跑", explanation: "古文中的「走」通常指「跑」。走路則用「行」。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「見乘輿車騎即走耳」的「耳」意思為？", options: ["耳朵", "而已、罷了", "語助詞，無義", "聽見"], answer: "而已、罷了", explanation: "「耳」通「爾」，是句末助詞，意為「而已」、「罷了」，表示限制語氣。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「此人親驚吾馬」的「親」意思為？", options: ["親人", "親自", "親近", "愛護"], answer: "親自", explanation: "「親」在此指「親自」。文帝強調是這個人親自驚嚇到我的馬。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「法者，天子所與天下公共也」的「者」字作用是？", options: ["指人", "指物", "語氣停頓", "疑問"], answer: "語氣停頓", explanation: "「者」用於句中主語後，表示語氣停頓，並引出下文的解釋或判斷。" });
-            q.push({ id: id++, category: "課文詞語與語法", question: "「更重之」的「之」字指代什麼？", options: ["張釋之", "犯人", "罪/刑罰", "馬"], answer: "罪/刑罰", explanation: "「之」為代詞，指代前文提到的罰金之罪，意即加重對他的處罰。" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「釋之為廷尉」的「為」字解釋為？", options: ["為了", "因為", "擔任", "被"], answer: "擔任" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「久之」的「之」字詞性與意義是？", options: ["代詞，指時間", "動詞，往", "助詞，無義", "介詞，的"], answer: "助詞，無義" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「廷尉當是也」的「當」字解釋為？", options: ["判決", "應當", "阻擋", "擔任"], answer: "判決" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「廷尉當是也」的「是」字解釋為？", options: ["此、這", "正確的", "贊同", "事情"], answer: "正確的" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「不信於民」的「於」字解釋為？", options: ["在", "給", "被", "從"], answer: "被" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「黔首」一詞意指？", options: ["皇帝", "貴族", "官員", "平民百姓"], answer: "平民百姓" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「良」久的「良」字解釋為？", options: ["良好", "很、甚", "善良", "稍微"], answer: "很、甚" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「乘輿」在課文中借代為？", options: ["馬車", "皇帝", "車夫", "馬匹"], answer: "皇帝" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「上使立誅之」中的「使」字解釋為？", options: ["派遣", "使用", "假使", "命令"], answer: "假使" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「一傾而天下用法皆為輕重」中的「傾」字意思為？", options: ["傾倒", "傾斜、偏差", "傾向", "完畢"], answer: "傾斜、偏差" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「是法不信於民也」中的「是」字解釋為？", options: ["正確", "是", "此、這", "凡是"], answer: "此、這" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「今法如此而更重之」中的「而」字解釋為？", options: ["而且", "卻/假如", "然後", "所以"], answer: "卻/假如" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「唯陛下察之」的「之」字是指？", options: ["張釋之", "犯人", "這件事（執法公正的重要性）", "廷尉"], answer: "這件事（執法公正的重要性）" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「涇渭分明」比喻什麼？", options: ["河水清澈", "是非好壞區別得非常清楚", "風景優美", "兩人感情分離"], answer: "是非好壞區別得非常清楚" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「無隙可乘」的意思是？", options: ["沒有車可以搭", "沒有空隙", "沒有可以利用的機會", "時間緊迫"], answer: "沒有可以利用的機會" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「下殺上」稱為什麼？", options: ["殺", "弒", "戮", "誅"], answer: "弒" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「上殺下」稱為什麼？", options: ["殺", "弒", "戮", "誅"], answer: "戮" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「殺有罪之人」稱為什麼？", options: ["殺", "弒", "戮", "誅"], answer: "誅" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「於是使騎捕」中的「騎」字詞性與意思為？", options: ["動詞，騎馬", "名詞，騎兵", "名詞，馬匹", "形容詞，快速的"], answer: "名詞，騎兵" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「匿橋下」的「匿」意思為？", options: ["隱藏", "溺水", "逃跑", "睡覺"], answer: "隱藏" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「見乘輿車騎即走耳」的「走」意思為？", options: ["走路", "跑", "離開", "發呆"], answer: "跑" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「見乘輿車騎即走耳」的「耳」意思為？", options: ["耳朵", "而已、罷了", "語助詞，無義", "聽見"], answer: "而已、罷了" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「此人親驚吾馬」的「親」意思為？", options: ["親人", "親自", "親近", "愛護"], answer: "親自" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「法者，天子所與天下公共也」的「者」字作用是？", options: ["指人", "指物", "語氣停頓", "疑問"], answer: "語氣停頓" });
+            q.push({ id: id++, category: "課文詞語與語法", question: "「更重之」的「之」字指代什麼？", options: ["張釋之", "犯人", "罪/刑罰", "馬"], answer: "罪/刑罰" });
 
             // 5. 敬詞謙詞對照表
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的父親，應使用？", options: ["家父", "令尊", "尊翁", "舍親"], answer: "令尊", explanation: "「令」是敬詞，用於稱呼對方的親屬。令尊即尊稱對方的父親。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "向他人介紹自己的妻子，應使用？", options: ["尊夫人", "賢內助", "拙荊", "令正"], answer: "拙荊", explanation: "「拙」是謙詞，用於稱呼自己或自己的事物。拙荊是謙稱自己的妻子。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的學校為「貴校」，稱呼自己的學校為？", options: ["小校", "拙校", "敝校", "賤校"], answer: "敝校", explanation: "「敝」是謙詞，意為破舊。敝校即謙稱自己的學校。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「賢喬梓」是用來稱呼對方？", options: ["父子", "兄弟", "夫婦", "師生"], answer: "父子", explanation: "喬梓指高大的喬木與低矮的梓木，比喻父子。賢喬梓是對父子的尊稱。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「賢昆仲」是用來稱呼對方？", options: ["父子", "兄弟", "夫婦", "朋友"], answer: "兄弟", explanation: "昆仲即兄弟。賢昆仲是對兄弟的尊稱。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「小犬」是用來謙稱自己的？", options: ["寵物狗", "兒子", "孫子", "弟弟"], answer: "兒子", explanation: "「小」是謙詞。小犬是謙稱自己的兒子，意同「犬子」。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的母親，應使用？", options: ["家母", "令堂", "尊堂", "舍母"], answer: "令堂", explanation: "「令」是敬詞，堂指高堂。令堂即尊稱對方的母親。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的女兒，應使用？", options: ["小女", "令媛", "千金", "舍妹"], answer: "令媛", explanation: "令媛是對別人女兒的尊稱。小女是謙稱自己的女兒。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的夫婦，應使用？", options: ["賢喬梓", "賢昆仲", "賢伉儷", "尊夫人"], answer: "賢伉儷", explanation: "伉儷指夫婦。賢伉儷是對夫婦的尊稱。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的老師，應使用？", options: ["貴師", "敝業師", "尊師", "家師"], answer: "敝業師", explanation: "敝業師是謙稱自己的授業恩師。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的見解為「高見」，謙稱自己的見解為？", options: ["淺見", "拙見", "低見", "愚見"], answer: "拙見", explanation: "拙見是謙稱自己的見解，意指笨拙的看法。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "詢問對方年齡的敬詞是？", options: ["幾歲", "貴庚", "高壽", "年紀"], answer: "貴庚", explanation: "貴庚是詢問平輩或晚輩年齡的敬詞。問長輩高壽。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的弟弟為？", options: ["家弟", "舍弟", "令弟", "小弟"], answer: "舍弟", explanation: "稱自己輩分低或年紀小的親屬用「舍」。舍弟即謙稱自己的弟弟。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的店鋪為？", options: ["貴店", "敝店", "小店", "賤店"], answer: "小店", explanation: "謙稱自己的商店為「小店」。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的父親為「家嚴」，謙稱母親為？", options: ["家慈", "家母", "舍母", "令堂"], answer: "家慈", explanation: "對人稱自己的長輩用「家」。父親嚴格故稱家嚴，母親慈愛故稱家慈。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「尊夫人」是用來稱呼？", options: ["自己的妻子", "對方的妻子", "對方的母親", "自己的母親"], answer: "對方的妻子", explanation: "尊夫人是對對方妻子的敬稱。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「舍姪」是用來稱呼？", options: ["對方的姪子", "自己的姪子", "自己的兒子", "鄰居的小孩"], answer: "自己的姪子", explanation: "舍姪是謙稱自己的姪子。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「敝公司」是用來稱呼？", options: ["對方的公司", "自己的公司", "倒閉的公司", "關係企業"], answer: "自己的公司", explanation: "敝公司是謙稱自己的公司。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「薄禮」是用來謙稱？", options: ["便宜的禮物", "自己送的禮物", "對方送的禮物", "包裝很薄的禮物"], answer: "自己送的禮物", explanation: "薄禮是謙稱自己送的禮物微薄，不成敬意。" });
-            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「家兄」是用來稱呼？", options: ["對方的哥哥", "自己的哥哥", "長輩", "鄰居大哥"], answer: "自己的哥哥", explanation: "家兄是對人謙稱自己的哥哥。" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的父親，應使用？", options: ["家父", "令尊", "尊翁", "舍親"], answer: "令尊" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "向他人介紹自己的妻子，應使用？", options: ["尊夫人", "賢內助", "拙荊", "令正"], answer: "拙荊" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的學校為「貴校」，稱呼自己的學校為？", options: ["小校", "拙校", "敝校", "賤校"], answer: "敝校" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「賢喬梓」是用來稱呼對方？", options: ["父子", "兄弟", "夫婦", "師生"], answer: "父子" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「賢昆仲」是用來稱呼對方？", options: ["父子", "兄弟", "夫婦", "朋友"], answer: "兄弟" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「小犬」是用來謙稱自己的？", options: ["寵物狗", "兒子", "孫子", "弟弟"], answer: "兒子" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的母親，應使用？", options: ["家母", "令堂", "尊堂", "舍母"], answer: "令堂" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的女兒，應使用？", options: ["小女", "令媛", "千金", "舍妹"], answer: "令媛" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的夫婦，應使用？", options: ["賢喬梓", "賢昆仲", "賢伉儷", "尊夫人"], answer: "賢伉儷" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的老師，應使用？", options: ["貴師", "敝業師", "尊師", "家師"], answer: "敝業師" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "稱呼對方的見解為「高見」，謙稱自己的見解為？", options: ["淺見", "拙見", "低見", "愚見"], answer: "拙見" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "詢問對方年齡的敬詞是？", options: ["幾歲", "貴庚", "高壽", "年紀"], answer: "貴庚" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的弟弟為？", options: ["家弟", "舍弟", "令弟", "小弟"], answer: "舍弟" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的店鋪為？", options: ["貴店", "敝店", "小店", "賤店"], answer: "小店" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "謙稱自己的父親為「家嚴」，謙稱母親為？", options: ["家慈", "家母", "舍母", "令堂"], answer: "家慈" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「尊夫人」是用來稱呼？", options: ["自己的妻子", "對方的妻子", "對方的母親", "自己的母親"], answer: "對方的妻子" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「舍姪」是用來稱呼？", options: ["對方的姪子", "自己的姪子", "自己的兒子", "鄰居的小孩"], answer: "自己的姪子" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「敝公司」是用來稱呼？", options: ["對方的公司", "自己的公司", "倒閉的公司", "關係企業"], answer: "自己的公司" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「薄禮」是用來謙稱？", options: ["便宜的禮物", "自己送的禮物", "對方送的禮物", "包裝很薄的禮物"], answer: "自己送的禮物" });
+            q.push({ id: id++, category: "敬詞謙詞對照表", question: "「家兄」是用來稱呼？", options: ["對方的哥哥", "自己的哥哥", "長輩", "鄰居大哥"], answer: "自己的哥哥" });
 
             return q;
         };
@@ -1082,7 +1082,6 @@
             const [showResumeDialog, setShowResumeDialog] = useState(false);
             const [isInitialized, setIsInitialized] = useState(false);
             const [favorites, setFavorites] = useState(new Set());
-            const [showSummary, setShowSummary] = useState(false);
 
             useEffect(() => {
                 // Check for saved quick quiz
@@ -1105,7 +1104,6 @@
                 setAnswers({});
                 setScore(0);
                 setIsInitialized(true);
-                setShowSummary(false);
                 LocalDB.clearProgress(STORAGE_KEYS.PROGRESS_QUICK);
             };
 
@@ -1117,10 +1115,6 @@
                     setScore(savedData.score || 0);
                     setIsInitialized(true);
                     setShowResumeDialog(false);
-                    // Check if already finished
-                    if (Object.keys(savedData.answers || {}).length === savedData.questions.length) {
-                        setShowSummary(true);
-                    }
                 } else {
                     startNewQuiz();
                 }
@@ -1168,66 +1162,9 @@
                     answers: newAnswers,
                     score: newScore
                 });
-
-                // Check completion
-                if (Object.keys(newAnswers).length === questions.length) {
-                    setTimeout(() => {
-                        setShowSummary(true);
-                        LocalDB.clearProgress(STORAGE_KEYS.PROGRESS_QUICK);
-                    }, 1500);
-                }
             };
 
             if (!isInitialized && !showResumeDialog) return <LoadingScreen />;
-
-            // Progress calculation
-            const progress = (Object.keys(answers).length / questions.length) * 100;
-
-            if (showSummary) {
-                const total = questions.length;
-                const wrong = total - score;
-                const rate = Math.round((score / total) * 100);
-
-                return (
-                    <div className="h-full flex items-center justify-center bg-stone-50 p-4">
-                        <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center animate-fade-in border-t-4 border-sky-500">
-                            <div className="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Trophy className="w-10 h-10 text-sky-600" />
-                            </div>
-                            <h2 className="text-3xl font-bold text-stone-800 mb-2">恭喜完成挑戰！</h2>
-                            <p className="text-stone-500 mb-8">您已完成所有題目的練習。</p>
-                            
-                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                                    <div className="text-stone-400 text-xs font-bold uppercase tracking-wider mb-1">總題數</div>
-                                    <div className="text-2xl font-bold text-stone-800">{total}</div>
-                                </div>
-                                <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
-                                    <div className="text-emerald-600 text-xs font-bold uppercase tracking-wider mb-1">答對</div>
-                                    <div className="text-2xl font-bold text-emerald-700">{score}</div>
-                                </div>
-                                <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-                                    <div className="text-red-500 text-xs font-bold uppercase tracking-wider mb-1">答錯</div>
-                                    <div className="text-2xl font-bold text-red-700">{wrong}</div>
-                                </div>
-                                <div className="bg-sky-50 p-4 rounded-xl border border-sky-100">
-                                    <div className="text-sky-600 text-xs font-bold uppercase tracking-wider mb-1">正確率</div>
-                                    <div className="text-2xl font-bold text-sky-700">{rate}%</div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <button onClick={handleRestart} className="w-full bg-sky-600 text-white py-3 rounded-xl font-bold hover:bg-sky-700 transition shadow-lg shadow-sky-200 flex items-center justify-center">
-                                    <RotateCcw className="w-5 h-5 mr-2" /> 重新開始
-                                </button>
-                                <button onClick={onBack} className="w-full bg-stone-100 text-stone-600 py-3 rounded-xl font-bold hover:bg-stone-200 transition">
-                                    返回首頁
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
 
             return (
                 <div className="h-full flex flex-col bg-stone-50 relative">
@@ -1235,26 +1172,17 @@
                     {showConfetti && <Confetti />}
                     
                     {/* Header with Scoreboard */}
-                    <div className="bg-white shadow-md border-b px-4 py-3 sticky top-0 z-20">
-                        <div className="flex items-center justify-between mb-2">
-                            <button onClick={onBack} className="flex items-center text-stone-600 hover:text-sky-600">
-                                <ArrowLeft className="w-5 h-5 mr-1" /> 退出
-                            </button>
-                            
-                            <div className="flex items-center space-x-4">
-                                <div className="flex items-center bg-sky-50 px-3 py-1 rounded-full border border-sky-100">
-                                    <Trophy className="w-4 h-4 text-sky-500 mr-2" />
-                                    <span className="font-bold text-sky-700">{score}</span>
-                                    <span className="text-stone-400 text-xs ml-1">答對</span>
-                                </div>
+                    <div className="bg-white shadow-md border-b px-4 py-3 flex items-center justify-between sticky top-0 z-20">
+                        <button onClick={onBack} className="flex items-center text-stone-600 hover:text-sky-600">
+                            <ArrowLeft className="w-5 h-5 mr-1" /> 退出
+                        </button>
+                        
+                        <div className="flex items-center space-x-4">
+                            <div className="flex items-center bg-sky-50 px-3 py-1 rounded-full border border-sky-100">
+                                <Trophy className="w-4 h-4 text-sky-500 mr-2" />
+                                <span className="font-bold text-sky-700">{score}</span>
+                                <span className="text-stone-400 text-xs ml-1">答對</span>
                             </div>
-                        </div>
-                        {/* Progress Bar */}
-                        <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
-                            <div className="h-full bg-sky-500 transition-all duration-300 ease-out" style={{ width: `${progress}%` }}></div>
-                        </div>
-                        <div className="text-right text-xs text-stone-400 mt-1">
-                            進度: {Object.keys(answers).length} / {questions.length}
                         </div>
                     </div>
 
@@ -1280,7 +1208,7 @@
                                         
                                         <h3 className="text-lg font-bold text-stone-800 mb-4">{q.question}</h3>
                                         
-                                        <div className="grid grid-cols-1 gap-2 mb-4">
+                                        <div className="grid grid-cols-1 gap-2">
                                             {q.options.map((opt, i) => {
                                                 let btnClass = "text-left px-4 py-3 rounded-lg border text-sm font-medium transition relative ";
                                                 
@@ -1311,26 +1239,12 @@
                                                 );
                                             })}
                                         </div>
-
-                                        {/* Explanation Box */}
-                                        {isAnswered && (
-                                            <div className="bg-sky-50 rounded-lg p-4 border border-sky-100 text-sm animate-fade-in relative overflow-hidden">
-                                                <div className="absolute top-0 left-0 w-1 h-full bg-sky-400"></div>
-                                                <div className="flex items-start">
-                                                    <Lightbulb className="w-5 h-5 text-sky-500 mr-2 flex-shrink-0 mt-0.5" />
-                                                    <div>
-                                                        <span className="font-bold text-sky-700 block mb-1">解析：</span>
-                                                        <p className="text-stone-700 leading-relaxed">{q.explanation}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 );
                             })}
                             
                             <div className="text-center py-8 text-stone-400 text-sm">
-                                已經到底了！繼續加油完成所有題目吧。
+                                已經到底了！
                             </div>
                         </div>
                     </div>
