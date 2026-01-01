@@ -643,6 +643,31 @@
                 { id: 'honorifics', label: '敬謙詞' },
             ];
 
+            // Helper to render image or placeholder
+            const renderImage = (src, alt) => {
+                if (!src) return null;
+                
+                return (
+                    <div className="mt-4 border-t border-dashed border-stone-200 pt-4">
+                        <div className="relative group">
+                            <img 
+                                src={src} 
+                                alt={alt} 
+                                className="w-full h-auto rounded-lg shadow-sm" 
+                                onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex'; // Show fallback
+                                }}
+                            />
+                            <div className="hidden flex-col items-center justify-center p-8 bg-stone-50 border-2 border-dashed border-stone-300 rounded-lg text-stone-400">
+                                <ImageOff className="w-8 h-8 mb-2" />
+                                <span className="text-sm">圖片未找到 ({src})</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
             return (
                 <div className="h-full flex flex-col">
                     <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between sticky top-0 z-10">
@@ -720,6 +745,7 @@
                                                         <span className="font-bold text-indigo-600 block mb-1">備註：</span>{row.note}
                                                     </div>
                                                 )}
+                                                {renderImage(row.image, row.category)}
                                             </div>
                                         ))}
                                     </div>
@@ -737,6 +763,7 @@
                                                 <div className="text-sm text-stone-500 bg-stone-50 p-3 rounded mb-4 border-l-2 border-emerald-200 italic">
                                                     出處：{item.source}
                                                 </div>
+                                                {renderImage(item.image, item.name)}
                                             </div>
                                         ))}
                                     </div>
@@ -755,6 +782,7 @@
                                                         {item.mean}
                                                     </div>
                                                 </div>
+                                                {renderImage(item.image, item.text)}
                                             </div>
                                         ))}
                                     </div>
@@ -1026,50 +1054,25 @@
             );
         };
 
-        const ResumeDialog = ({ onResume, onRestart }) => {
-            const [confirmDelete, setConfirmDelete] = useState(false);
-
-            return (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full animate-fade-in text-center">
-                        <div className="mx-auto w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mb-4">
-                            <RotateCcw className="w-8 h-8 text-sky-600" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-stone-800 mb-2">發現未完成的測驗</h3>
-                        <p className="text-stone-500 mb-8">系統記錄到您上次有未完成的快速測驗。是否要繼續作答？</p>
-                        <div className="space-y-3">
-                            <button onClick={onResume} className="w-full bg-sky-600 text-white py-3 rounded-xl font-bold hover:bg-sky-700 transition shadow-lg shadow-sky-200">
-                                繼續測驗
-                            </button>
-                            <button 
-                                onClick={() => {
-                                    if (confirmDelete) {
-                                        onRestart();
-                                    } else {
-                                        setConfirmDelete(true);
-                                    }
-                                }} 
-                                className={`w-full py-3 rounded-xl font-bold transition flex items-center justify-center ${confirmDelete ? 'bg-red-100 text-red-600 hover:bg-red-200 ring-2 ring-red-300' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
-                            >
-                                {confirmDelete ? (
-                                    <>
-                                        <AlertCircle className="w-5 h-5 mr-2" />
-                                        確定刪除？(再次點擊)
-                                    </>
-                                ) : (
-                                    "重新開始"
-                                )}
-                            </button>
-                            {confirmDelete && (
-                                <button onClick={() => setConfirmDelete(false)} className="text-sm text-stone-400 hover:text-stone-600 underline">
-                                    取消刪除
-                                </button>
-                            )}
-                        </div>
+        const ResumeDialog = ({ onResume, onRestart }) => (
+            <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full animate-fade-in text-center">
+                    <div className="mx-auto w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mb-4">
+                        <RotateCcw className="w-8 h-8 text-sky-600" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-stone-800 mb-2">發現未完成的測驗</h3>
+                    <p className="text-stone-500 mb-8">系統記錄到您上次有未完成的快速測驗。是否要繼續作答？</p>
+                    <div className="space-y-3">
+                        <button onClick={onResume} className="w-full bg-sky-600 text-white py-3 rounded-xl font-bold hover:bg-sky-700 transition shadow-lg shadow-sky-200">
+                            繼續測驗
+                        </button>
+                        <button onClick={onRestart} className="w-full bg-stone-100 text-stone-600 py-3 rounded-xl font-bold hover:bg-stone-200 transition">
+                            重新開始
+                        </button>
                     </div>
                 </div>
-            );
-        };
+            </div>
+        );
 
         const QuickQuizModule = ({ onBack }) => {
             const [questions, setQuestions] = useState([]);
@@ -1080,7 +1083,6 @@
             const [isInitialized, setIsInitialized] = useState(false);
             const [favorites, setFavorites] = useState(new Set());
             const [showSummary, setShowSummary] = useState(false);
-            const [scrollToId, setScrollToId] = useState(null); // 新增：用於紀錄要捲動到的題目ID
 
             useEffect(() => {
                 // Check for saved quick quiz
@@ -1096,20 +1098,6 @@
                 const intSet = new Set(Array.from(favSet).map(id => parseInt(id)));
                 setFavorites(intSet);
             }, []);
-
-            // 新增：處理自動捲動的 useEffect
-            useEffect(() => {
-                if (isInitialized && scrollToId) {
-                    // 使用 setTimeout 確保 DOM 已經渲染完成
-                    setTimeout(() => {
-                        const element = document.getElementById(`question-${scrollToId}`);
-                        if (element) {
-                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    }, 300);
-                    setScrollToId(null); // 重置
-                }
-            }, [isInitialized, scrollToId]);
 
             const startNewQuiz = () => {
                 const shuffled = [...ALL_QUESTIONS].sort(() => 0.5 - Math.random());
@@ -1129,26 +1117,9 @@
                     setScore(savedData.score || 0);
                     setIsInitialized(true);
                     setShowResumeDialog(false);
-                    
-                    // 計算最後作答的題目
-                    const answeredIds = Object.keys(savedData.answers || {});
-                    if (answeredIds.length > 0) {
-                        // 找出在題目列表中，有作答紀錄的最後一題的索引
-                        let lastAnsweredIndex = -1;
-                        savedData.questions.forEach((q, index) => {
-                            if (savedData.answers[q.id]) {
-                                lastAnsweredIndex = index;
-                            }
-                        });
-
-                        if (lastAnsweredIndex !== -1) {
-                            setScrollToId(savedData.questions[lastAnsweredIndex].id);
-                        }
-                        
-                        // Check if already finished
-                        if (answeredIds.length === savedData.questions.length) {
-                            setShowSummary(true);
-                        }
+                    // Check if already finished
+                    if (Object.keys(savedData.answers || {}).length === savedData.questions.length) {
+                        setShowSummary(true);
                     }
                 } else {
                     startNewQuiz();
@@ -1296,7 +1267,7 @@
                                 const isCorrect = userAnswer === q.answer;
 
                                 return (
-                                    <div key={q.id} id={`question-${q.id}`} className={`bg-white rounded-xl shadow-sm border p-6 transition duration-300 ${isAnswered ? (isCorrect ? 'border-emerald-200 bg-emerald-50/30' : 'border-red-200 bg-red-50/30') : 'border-stone-100 hover:shadow-md'}`}>
+                                    <div key={q.id} className={`bg-white rounded-xl shadow-sm border p-6 transition duration-300 ${isAnswered ? (isCorrect ? 'border-emerald-200 bg-emerald-50/30' : 'border-red-200 bg-red-50/30') : 'border-stone-100 hover:shadow-md'}`}>
                                         <div className="flex justify-between items-start mb-4">
                                             <span className="text-xs font-bold text-stone-500 bg-stone-100 px-2 py-1 rounded">{q.category}</span>
                                             <div className="flex items-center space-x-3">
